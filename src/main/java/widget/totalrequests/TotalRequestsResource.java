@@ -1,4 +1,4 @@
-package totalrequests;
+package widget.totalrequests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,11 @@ public class TotalRequestsResource {
 		}
 
 		if (action.equals("all")) {
+			System.out.println("all");
+			return TotalRequestsService.getInstance().getAllModels();
+		}
+		
+		if (action.equals("reduced")) {
 			System.out.println("all");
 			return TotalRequestsService.getInstance().getReducedModels();
 		}

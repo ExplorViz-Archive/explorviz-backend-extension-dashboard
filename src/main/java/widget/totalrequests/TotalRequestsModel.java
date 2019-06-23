@@ -1,4 +1,4 @@
-package totalrequests;
+package widget.totalrequests;
 
 import com.github.jasminb.jsonapi.annotations.Type;
 import net.explorviz.extension.dashboard.model.BaseModel;

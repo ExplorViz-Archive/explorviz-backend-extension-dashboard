@@ -1,0 +1,18 @@
+# Windows Version 18.06.1-ce-win73 (or newer)
+version: "3.2"
+services:
+
+  mongo-dashboard:
+    image: mongo
+    container_name: explorviz-dashboard-mongo
+    command: mongod --port 7018
+    ports:
+       - 7018:7018
+    volumes:
+       - explorviz-dashboard-mongo-data:/data/db
+       - explorviz-dashboard-mongo-configdb:/data/configdb
+
+
+volumes:
+  explorviz-dashboard-mongo-data:
+  explorviz-dashboard-mongo-configdb:

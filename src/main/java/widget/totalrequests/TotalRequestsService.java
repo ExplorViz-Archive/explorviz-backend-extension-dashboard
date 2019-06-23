@@ -1,4 +1,4 @@
-package totalrequests;
+package widget.totalrequests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,10 @@ public class TotalRequestsService {
 	public TotalRequestsModel getCurrentModel() {
 		return MongoDashboardRepository.getInstance().getLastTotalRequests();
 
+	}
+
+	public List<TotalRequestsModel> getAllModels() {
+		return MongoDashboardRepository.getInstance().getAllTotalRequests();
 	}
 
 	/**

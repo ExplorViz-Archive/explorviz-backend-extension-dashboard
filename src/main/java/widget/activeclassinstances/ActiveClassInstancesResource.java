@@ -1,4 +1,4 @@
-package activeclassinstances;
+package widget.activeclassinstances;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -11,7 +11,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.operation.OrderBy;
 
-import totalrequests.TotalRequestsModel;
+import widget.totalrequests.TotalRequestsModel;
 
 public class MongoDashboardRepository {
 

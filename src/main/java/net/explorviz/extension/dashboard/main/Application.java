@@ -15,13 +15,15 @@ import net.explorviz.shared.landscape.model.helper.TypeProvider;
 import net.explorviz.shared.security.filters.AuthenticationFilter;
 import net.explorviz.shared.security.filters.AuthorizationFilter;
 import net.explorviz.shared.security.filters.CorsResponseFilter;
-import totalrequests.TotalRequestsModel;
-import totalrequests.TotalRequestsResource;
+import widget.activeclassinstances.ActiveClassInstancesModel;
+import widget.activeclassinstances.ActiveClassInstancesResource;
+import widget.programminglanguage.ProgrammingLanguagesModel;
+import widget.programminglanguage.ProgrammingLanguagesOccurrenceModel;
+import widget.programminglanguage.ProgrammingLanguagesResource;
+import widget.totalrequests.TotalRequestsModel;
+import widget.totalrequests.TotalRequestsResource;
 
 import org.glassfish.jersey.server.ResourceConfig;
-
-import activeclassinstances.ActiveClassInstancesModel;
-import activeclassinstances.ActiveClassInstancesResource;
 
 public class Application extends ResourceConfig {
 
@@ -35,6 +37,8 @@ public class Application extends ResourceConfig {
     GenericTypeFinder.getTypeMap().put("ClazzCommunicationListModel", ClazzCommunicationListModel.class);
     GenericTypeFinder.getTypeMap().put("ActiveClassInstancesModel", ActiveClassInstancesModel.class);
     GenericTypeFinder.getTypeMap().put("TotalRequestsModel", TotalRequestsModel.class);
+    GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesModel", ProgrammingLanguagesModel.class);
+    GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesOccurrenceModel", ProgrammingLanguagesOccurrenceModel.class);
     
 
     
@@ -62,6 +66,7 @@ public class Application extends ResourceConfig {
     register(ClazzCommunicationWidgetResource.class);
     register(ActiveClassInstancesResource.class);
     register(TotalRequestsResource.class);
+    register(ProgrammingLanguagesResource.class);
 
     // Starting point for your DI-based extension
     this.register(SetupApplicationListener.class);

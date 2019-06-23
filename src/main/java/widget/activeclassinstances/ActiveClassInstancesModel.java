@@ -1,4 +1,4 @@
-package activeclassinstances;
+package widget.activeclassinstances;
 
 import java.util.List;
 import com.github.jasminb.jsonapi.annotations.Type;

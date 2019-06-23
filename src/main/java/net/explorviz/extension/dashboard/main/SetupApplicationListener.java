@@ -11,7 +11,9 @@ import net.explorviz.extension.dashboard.services.DummyService;
 import net.explorviz.extension.dashboard.services.KafkaLandscapeExchangeService;
 import net.explorviz.extension.dashboard.services.TotalOverviewWidgetService;
 import net.explorviz.shared.common.idgen.IdGenerator;
-import totalrequests.TotalRequestsModel;
+import widget.activeclassinstances.ActiveClassInstancesModel;
+import widget.activeclassinstances.ActiveClassInstancesService;
+import widget.totalrequests.TotalRequestsModel;
 
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
 import org.glassfish.jersey.server.monitoring.ApplicationEvent.Type;
@@ -20,9 +22,6 @@ import org.glassfish.jersey.server.monitoring.RequestEvent;
 import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import activeclassinstances.ActiveClassInstancesModel;
-import activeclassinstances.ActiveClassInstancesService;
 
 /**
  * Primary starting class - executed, when the servlet context is started.
