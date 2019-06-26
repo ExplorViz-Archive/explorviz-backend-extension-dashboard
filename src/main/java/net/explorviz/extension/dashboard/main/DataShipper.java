@@ -13,6 +13,8 @@ import widget.activeclassinstances.ActiveClassInstancesModel;
 import widget.activeclassinstances.ActiveClassInstancesService;
 import widget.programminglanguage.ProgrammingLanguagesModel;
 import widget.programminglanguage.ProgrammingLanguagesService;
+import widget.ramcpu.RamCpuModel;
+import widget.ramcpu.RamCpuService;
 import widget.totalrequests.TotalRequestsService;
 
 public class DataShipper {
@@ -31,6 +33,7 @@ public class DataShipper {
 
 	private List<ActiveClassInstancesModel> activeClassInstances = new ArrayList<ActiveClassInstancesModel>();
 	private List<ProgrammingLanguagesModel> programmingLanguageList = new ArrayList<ProgrammingLanguagesModel>();
+	private List<RamCpuModel> ramCpuModelList = new ArrayList<RamCpuModel>();
 
 	public void update(Landscape l) {
 		// java.lang.System.out.println(l.get);
@@ -39,6 +42,7 @@ public class DataShipper {
 
 		activeClassInstances = new ArrayList<ActiveClassInstancesModel>();
 		programmingLanguageList = new ArrayList<ProgrammingLanguagesModel>();
+		ramCpuModelList = new ArrayList<RamCpuModel>();
 
 		List<System> systems = l.getSystems();
 		// java.lang.System.out.println("Systems: " + systems.size());
@@ -53,7 +57,16 @@ public class DataShipper {
 				List<Node> nodes = nodeGroups.get(j).getNodes();
 				// java.lang.System.out.println("Nodes: " + nodes.size());
 
+				// Nodes
 				for (int k = 0; k < nodes.size(); k++) {
+
+					long timestamp = l.getTimestamp().getTimestamp();
+					String nodeName = nodes.get(k).getDisplayName();
+					double cpuUtilization = nodes.get(k).getCpuUtilization();
+					long freeRam = nodes.get(k).getFreeRAM();
+					long usedRam = nodes.get(k).getUsedRAM();
+
+					ramCpuModelList.add(new RamCpuModel(timestamp, nodeName, cpuUtilization, freeRam, usedRam));
 
 					List<net.explorviz.shared.landscape.model.application.Application> applications = nodes.get(k)
 							.getApplications();
@@ -67,9 +80,8 @@ public class DataShipper {
 						ProgrammingLanguagesModel programmingLanguagesModel = new ProgrammingLanguagesModel(
 								l.getTimestamp().getTimestamp(), applications.get(n).getName(),
 								applications.get(n).getProgrammingLanguage());
-						
+
 						programmingLanguageList.add(programmingLanguagesModel);
-	
 
 						checkComponents(components, l);
 
@@ -81,6 +93,7 @@ public class DataShipper {
 
 		ActiveClassInstancesService.getInstance().update(activeClassInstances);
 		ProgrammingLanguagesService.getInstance().update(programmingLanguageList);
+		RamCpuService.getInstance().update(ramCpuModelList);
 	}
 
 	private void checkComponents(List<Component> c, Landscape l) {

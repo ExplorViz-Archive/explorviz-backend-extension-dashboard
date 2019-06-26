@@ -20,6 +20,8 @@ import widget.activeclassinstances.ActiveClassInstancesResource;
 import widget.programminglanguage.ProgrammingLanguagesModel;
 import widget.programminglanguage.ProgrammingLanguagesOccurrenceModel;
 import widget.programminglanguage.ProgrammingLanguagesResource;
+import widget.ramcpu.RamCpuModel;
+import widget.ramcpu.RamCpuResource;
 import widget.totalrequests.TotalRequestsModel;
 import widget.totalrequests.TotalRequestsResource;
 
@@ -39,6 +41,7 @@ public class Application extends ResourceConfig {
     GenericTypeFinder.getTypeMap().put("TotalRequestsModel", TotalRequestsModel.class);
     GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesModel", ProgrammingLanguagesModel.class);
     GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesOccurrenceModel", ProgrammingLanguagesOccurrenceModel.class);
+    GenericTypeFinder.getTypeMap().put("RamCpuModel", RamCpuModel.class);
     
 
     
@@ -67,6 +70,7 @@ public class Application extends ResourceConfig {
     register(ActiveClassInstancesResource.class);
     register(TotalRequestsResource.class);
     register(ProgrammingLanguagesResource.class);
+    register(RamCpuResource.class);
 
     // Starting point for your DI-based extension
     this.register(SetupApplicationListener.class);
