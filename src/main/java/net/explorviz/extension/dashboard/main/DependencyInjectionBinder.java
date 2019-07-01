@@ -8,7 +8,7 @@ import net.explorviz.extension.dashboard.services.KafkaLandscapeExchangeService;
 import net.explorviz.extension.dashboard.services.LandscapeSerializationHelper;
 import net.explorviz.extension.dashboard.services.TotalOverviewWidgetService;
 import net.explorviz.shared.common.injection.CommonDependencyInjectionBinder;
-import widget.activeclassinstances.ActiveClassInstancesService;
+
 
 /**
  * The DependencyInjectionBinder is used to register Contexts and Dependency Injection (CDI) aspects

@@ -27,52 +27,55 @@ import widget.totalrequests.TotalRequestsResource;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
+import instantiatedwidgets.InstantiatedWidgetModel;
+import instantiatedwidgets.InstantiatedWidgetResource;
+
 public class Application extends ResourceConfig {
 
-  public Application() {
+	public Application() {
 
-    GenericTypeFinder.getTypeMap().put("DummyModel", DummyModel.class);
-    GenericTypeFinder.getTypeMap().put("SubDummyModel", SubDummyModel.class);
-    
-    GenericTypeFinder.getTypeMap().put("TotalOverviewWidgetModel", TotalOverviewWidgetModel.class);
-    GenericTypeFinder.getTypeMap().put("ClazzCommunicationModel", ClazzCommunicationModel.class);
-    GenericTypeFinder.getTypeMap().put("ClazzCommunicationListModel", ClazzCommunicationListModel.class);
-    GenericTypeFinder.getTypeMap().put("ActiveClassInstancesModel", ActiveClassInstancesModel.class);
-    GenericTypeFinder.getTypeMap().put("TotalRequestsModel", TotalRequestsModel.class);
-    GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesModel", ProgrammingLanguagesModel.class);
-    GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesOccurrenceModel", ProgrammingLanguagesOccurrenceModel.class);
-    GenericTypeFinder.getTypeMap().put("RamCpuModel", RamCpuModel.class);
-    
+		GenericTypeFinder.getTypeMap().put("DummyModel", DummyModel.class);
+		GenericTypeFinder.getTypeMap().put("SubDummyModel", SubDummyModel.class);
 
-    
+		GenericTypeFinder.getTypeMap().put("TotalOverviewWidgetModel", TotalOverviewWidgetModel.class);
+		GenericTypeFinder.getTypeMap().put("ClazzCommunicationModel", ClazzCommunicationModel.class);
+		GenericTypeFinder.getTypeMap().put("ClazzCommunicationListModel", ClazzCommunicationListModel.class);
+		GenericTypeFinder.getTypeMap().put("ActiveClassInstancesModel", ActiveClassInstancesModel.class);
+		GenericTypeFinder.getTypeMap().put("TotalRequestsModel", TotalRequestsModel.class);
+		GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesModel", ProgrammingLanguagesModel.class);
+		GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesOccurrenceModel",
+				ProgrammingLanguagesOccurrenceModel.class);
+		GenericTypeFinder.getTypeMap().put("RamCpuModel", RamCpuModel.class);
+		GenericTypeFinder.getTypeMap().put("InstantiatedWidgetModel", InstantiatedWidgetModel.class);
 
-    // register Landscape Model classes, since we want to use them
-    TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
-      GenericTypeFinder.getTypeMap().put(classname, classRef);
-    });
+		// register Landscape Model classes, since we want to use them
+		TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
+			GenericTypeFinder.getTypeMap().put(classname, classRef);
+		});
 
-    // register DI
-    register(new DependencyInjectionBinder());
+		// register DI
+		register(new DependencyInjectionBinder());
 
-    // Security
-    this.register(AuthenticationFilter.class);
-    this.register(AuthorizationFilter.class);
-    this.register(CorsResponseFilter.class);
+		// Security
+		this.register(AuthenticationFilter.class);
+		this.register(AuthorizationFilter.class);
+		this.register(CorsResponseFilter.class);
 
-    // register providers
-    this.register(JsonApiProvider.class);
-    this.register(JsonApiListProvider.class);
+		// register providers
+		this.register(JsonApiProvider.class);
+		this.register(JsonApiListProvider.class);
 
-    // register the TestResource
-    register(TestResource.class);
-    register(TotalOverviewWidgetResource.class);
-    register(ClazzCommunicationWidgetResource.class);
-    register(ActiveClassInstancesResource.class);
-    register(TotalRequestsResource.class);
-    register(ProgrammingLanguagesResource.class);
-    register(RamCpuResource.class);
+		// register the Resources
+		register(TestResource.class);
+		register(TotalOverviewWidgetResource.class);
+		register(ClazzCommunicationWidgetResource.class);
+		register(ActiveClassInstancesResource.class);
+		register(TotalRequestsResource.class);
+		register(ProgrammingLanguagesResource.class);
+		register(RamCpuResource.class);
+		register(InstantiatedWidgetResource.class);
 
-    // Starting point for your DI-based extension
-    this.register(SetupApplicationListener.class);
-  }
+		// Starting point for your DI-based extension
+		this.register(SetupApplicationListener.class);
+	}
 }
