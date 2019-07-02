@@ -49,7 +49,7 @@ public class MongoDashboardRepository {
 			throw e;
 		}
 
-		System.out.println("savedClazzCommunication");
+		
 
 	}
 
@@ -87,7 +87,7 @@ public class MongoDashboardRepository {
 			throw e;
 		}
 
-		System.out.println("MongoDB: (function saveTotalRequests)  saved a model.");
+		
 
 	}
 
@@ -169,7 +169,7 @@ public class MongoDashboardRepository {
 
 			List<TotalRequestsModel> modelList = new ArrayList<TotalRequestsModel>();
 
-			for (Iterator i = result.iterator(); i.hasNext();) {
+			for (Iterator<Document> i = result.iterator(); i.hasNext();) {
 
 				Document temp = (Document) i.next();
 
@@ -193,15 +193,17 @@ public class MongoDashboardRepository {
 		}
 	}
 
-	public void saveInstantiatedWidgets(long userID, List<InstantiatedWidgetModel> instantiatedWidgets) {
+	public synchronized void saveInstantiatedWidgets(long userID, List<InstantiatedWidgetModel> instantiatedWidgets) {
 		final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
 		for (int i = 0; i < instantiatedWidgets.size(); i++) {
 			final Document document = new Document();
 
+			document.append("instantiatedwidget", "instantiatedwidget");
 			document.append("userID", instantiatedWidgets.get(i).getUserID());
 			document.append("widgetName", instantiatedWidgets.get(i).getWidgetName());
 			document.append("instanceID", instantiatedWidgets.get(i).getInstanceID());
+			document.append("timestamp", instantiatedWidgets.get(i).getTimestamp());
 
 			try {
 				deleteInstantiatedWidgets(userID);
@@ -211,14 +213,40 @@ public class MongoDashboardRepository {
 			}
 		}
 
-		System.out.println("MongoDB: (function saveInstantiatedWidgets)  saved widget instances.");
 	}
 
-	public List<InstantiatedWidgetModel> getInstantiatedWidgets(long userID) {
+	public synchronized void saveInstantiatedWidget(InstantiatedWidgetModel widget) {
 		final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
 		final Document document = new Document();
 
+		document.append("instantiatedwidget", "instantiatedwidget");
+		document.append("userID", widget.getUserID());
+		document.append("widgetName", widget.getWidgetName());
+		document.append("instanceID", widget.getInstanceID());
+		document.append("timestamp", widget.getTimestamp());
+		
+		List<InstantiatedWidgetModel> temp = getInstantiatedWidgets(widget.getUserID());
+		
+		if(temp != null && temp.get(0).getTimestamp() != widget.getTimestamp()) {
+			deleteInstantiatedWidgets(widget.getUserID());
+		}
+
+		try {
+			collection.insertOne(document);
+		} catch (final MongoException e) {
+			throw e;
+		}
+
+
+	}
+
+	public synchronized List<InstantiatedWidgetModel> getInstantiatedWidgets(long userID) {
+		final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+		final Document document = new Document();
+
+		document.append("instantiatedwidget", "instantiatedwidget");
 		document.append("userID", userID);
 
 		final FindIterable<Document> result;
@@ -235,29 +263,33 @@ public class MongoDashboardRepository {
 
 			List<InstantiatedWidgetModel> list = new ArrayList<InstantiatedWidgetModel>();
 
-			for (Iterator i = result.iterator(); i.hasNext();) {
+			for (Iterator<Document> i = result.iterator(); i.hasNext();) {
 
 				Document temp = (Document) i.next();
 
-				if (temp.get("userID") != null && temp.get("widgetName") != null && temp.get("instanceID") != null) {
+				if (temp.get("userID") != null && temp.get("widgetName") != null && temp.get("instanceID") != null && temp.get("timestamp") != null) {
 
 					String widgetName = "" + temp.get("widgetName").toString();
 					int instanceID = Integer.parseInt(temp.get("instanceID").toString());
+					
+					long timestamp = Long.parseLong(temp.get("timestamp").toString());
 
-					list.add(new InstantiatedWidgetModel(instanceID, widgetName, instanceID));
+					list.add(new InstantiatedWidgetModel(userID, widgetName, instanceID, timestamp));
 
 				} else {
 					return null;
 				}
 
 			}
+			
+	
 
 			return list;
 
 		}
 	}
 
-	public void deleteInstantiatedWidgets(long userID) {
+	public synchronized void deleteInstantiatedWidgets(long userID) {
 		final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 		final Document document = new Document();
 
