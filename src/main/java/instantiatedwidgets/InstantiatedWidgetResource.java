@@ -25,6 +25,7 @@ public class InstantiatedWidgetResource {
 	@Produces(MEDIA_TYPE)
 	public List<InstantiatedWidgetModel> getAll(@DefaultValue("0") @QueryParam("userID") long userID) {
 
+		System.out.println("Get Request InstantiatedWidgetModel: UserID -> " + userID);
 
 		return InstantiatedWidgetService.getInstance().getInstantiatedWidgets(userID);
 

@@ -49,8 +49,6 @@ public class MongoDashboardRepository {
 			throw e;
 		}
 
-		
-
 	}
 
 	public Optional<String> getClazzCommunicationByLandscapeID(final String landscapeID) {
@@ -86,8 +84,6 @@ public class MongoDashboardRepository {
 		} catch (final MongoException e) {
 			throw e;
 		}
-
-		
 
 	}
 
@@ -204,6 +200,7 @@ public class MongoDashboardRepository {
 			document.append("widgetName", instantiatedWidgets.get(i).getWidgetName());
 			document.append("instanceID", instantiatedWidgets.get(i).getInstanceID());
 			document.append("timestamp", instantiatedWidgets.get(i).getTimestamp());
+			document.append("orderID", instantiatedWidgets.get(i).getOrderID());
 
 			try {
 				deleteInstantiatedWidgets(userID);
@@ -225,10 +222,12 @@ public class MongoDashboardRepository {
 		document.append("widgetName", widget.getWidgetName());
 		document.append("instanceID", widget.getInstanceID());
 		document.append("timestamp", widget.getTimestamp());
-		
+		document.append("orderID", widget.getOrderID());
+
 		List<InstantiatedWidgetModel> temp = getInstantiatedWidgets(widget.getUserID());
-		
-		if(temp != null && temp.get(0).getTimestamp() != widget.getTimestamp()) {
+
+		// delete old entrys if we get data with a newer timestamp.
+		if (temp != null && temp.get(0).getTimestamp() != widget.getTimestamp()) {
 			deleteInstantiatedWidgets(widget.getUserID());
 		}
 
@@ -237,7 +236,6 @@ public class MongoDashboardRepository {
 		} catch (final MongoException e) {
 			throw e;
 		}
-
 
 	}
 
@@ -250,6 +248,7 @@ public class MongoDashboardRepository {
 		document.append("userID", userID);
 
 		final FindIterable<Document> result;
+		List<InstantiatedWidgetModel> list = new ArrayList<InstantiatedWidgetModel>();
 
 		try {
 			result = collection.find(document);
@@ -258,31 +257,31 @@ public class MongoDashboardRepository {
 		}
 
 		if (result.first() == null) {
-			return null;
+			// return null;
+			list.add(new InstantiatedWidgetModel(userID, "empty", 0, 0, 0));
+			return list;
 		} else {
-
-			List<InstantiatedWidgetModel> list = new ArrayList<InstantiatedWidgetModel>();
 
 			for (Iterator<Document> i = result.iterator(); i.hasNext();) {
 
 				Document temp = (Document) i.next();
 
-				if (temp.get("userID") != null && temp.get("widgetName") != null && temp.get("instanceID") != null && temp.get("timestamp") != null) {
+				if (temp.get("userID") != null && temp.get("widgetName") != null && temp.get("instanceID") != null
+						&& temp.get("timestamp") != null && temp.get("orderID") != null) {
 
 					String widgetName = "" + temp.get("widgetName").toString();
 					int instanceID = Integer.parseInt(temp.get("instanceID").toString());
-					
 					long timestamp = Long.parseLong(temp.get("timestamp").toString());
+					int orderID = Integer.parseInt(temp.get("orderID").toString());
 
-					list.add(new InstantiatedWidgetModel(userID, widgetName, instanceID, timestamp));
+					list.add(new InstantiatedWidgetModel(userID, widgetName, instanceID, timestamp, orderID));
 
 				} else {
+
 					return null;
 				}
 
 			}
-			
-	
 
 			return list;
 

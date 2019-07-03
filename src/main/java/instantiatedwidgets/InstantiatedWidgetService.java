@@ -24,8 +24,8 @@ public class InstantiatedWidgetService {
 
 	}
 
-	public void setInstantiatedWidget(InstantiatedWidgetModel m) {
-		MongoDashboardRepository.getInstance().saveInstantiatedWidget(m);
+	public void setInstantiatedWidget(InstantiatedWidgetModel model) {
+		MongoDashboardRepository.getInstance().saveInstantiatedWidget(model);
 	}
 	
 	public void deleteInstantiatedWidgets(Long userID) {

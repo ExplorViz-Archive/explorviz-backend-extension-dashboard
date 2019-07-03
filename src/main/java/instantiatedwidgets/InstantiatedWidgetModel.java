@@ -6,22 +6,31 @@ import net.explorviz.extension.dashboard.model.BaseModel;
 @Type("instantiatedwidget")
 public class InstantiatedWidgetModel extends BaseModel {
 
-	
 	private long userID;
 	private String widgetName;
 	private int instanceID;
 	private long timestamp;
+	private int orderID;
 
 	public InstantiatedWidgetModel() {
 		// default constructor for JSON API parsing
 	}
 
-	public InstantiatedWidgetModel(long userID, String widgetName, int instanceID, long timestamp) {
+	public InstantiatedWidgetModel(long userID, String widgetName, int instanceID, long timestamp, int orderID) {
 		super();
 		this.userID = userID;
 		this.widgetName = widgetName;
 		this.instanceID = instanceID;
 		this.timestamp = timestamp;
+		this.orderID = orderID;
+	}
+
+	public int getOrderID() {
+		return orderID;
+	}
+
+	public void setOrderID(int orderID) {
+		this.orderID = orderID;
 	}
 
 	public long getTimestamp() {
@@ -56,9 +65,8 @@ public class InstantiatedWidgetModel extends BaseModel {
 		this.instanceID = instanceID;
 	}
 
-
-	public String toString() 
-	{
-		return "instantiatedwidget: [userID: "+userID + ", widgetName: " +widgetName+ ", instanceID: "+ instanceID + ", timestamp: " + timestamp+"]";
+	public String toString() {
+		return "instantiatedwidget: [userID: " + userID + ", widgetName: " + widgetName + ", instanceID: " + instanceID
+				+ ", timestamp: " + timestamp + ", orderID: "+ orderID + "]";
 	}
 }
