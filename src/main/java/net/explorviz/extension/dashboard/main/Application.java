@@ -22,6 +22,8 @@ import widget.programminglanguage.ProgrammingLanguagesOccurrenceModel;
 import widget.programminglanguage.ProgrammingLanguagesResource;
 import widget.ramcpu.RamCpuModel;
 import widget.ramcpu.RamCpuResource;
+import widget.ramcpu.RamCpuSettingsModel;
+import widget.ramcpu.RamCpuSettingsResource;
 import widget.totalrequests.TotalRequestsModel;
 import widget.totalrequests.TotalRequestsResource;
 
@@ -47,6 +49,7 @@ public class Application extends ResourceConfig {
 				ProgrammingLanguagesOccurrenceModel.class);
 		GenericTypeFinder.getTypeMap().put("RamCpuModel", RamCpuModel.class);
 		GenericTypeFinder.getTypeMap().put("InstantiatedWidgetModel", InstantiatedWidgetModel.class);
+		GenericTypeFinder.getTypeMap().put("RamCpuSettingsModel", RamCpuSettingsModel.class);
 
 		// register Landscape Model classes, since we want to use them
 		TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
@@ -74,6 +77,7 @@ public class Application extends ResourceConfig {
 		register(ProgrammingLanguagesResource.class);
 		register(RamCpuResource.class);
 		register(InstantiatedWidgetResource.class);
+		register(RamCpuSettingsResource.class);
 
 		// Starting point for your DI-based extension
 		this.register(SetupApplicationListener.class);

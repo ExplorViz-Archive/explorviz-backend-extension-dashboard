@@ -12,6 +12,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.operation.OrderBy;
 
 import instantiatedwidgets.InstantiatedWidgetModel;
+import widget.ramcpu.RamCpuSettingsModel;
 import widget.totalrequests.TotalRequestsModel;
 
 public class MongoDashboardRepository {
@@ -299,5 +300,76 @@ public class MongoDashboardRepository {
 		} catch (final MongoException e) {
 			throw e;
 		}
+	}
+
+	private Object ramcpusettingslock = new Object(); 
+
+	public void saveRamCpuSetting(RamCpuSettingsModel setting) {
+		synchronized (ramcpusettingslock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			document.append("ramcpusetting", "ramcpusetting");
+			document.append("nodeName", setting.getNodeName());
+			document.append("instanceID", setting.getInstanceID());
+
+			deleteRamCpuSetting(setting.getInstanceID());
+
+			try {
+				collection.insertOne(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+		}
+	}
+
+	public void deleteRamCpuSetting(int instanceID) {
+		synchronized (ramcpusettingslock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+			final Document document = new Document();
+
+			document.append("ramcpusetting", "ramcpusetting");
+			document.append("instanceID", instanceID);
+
+			try {
+				collection.deleteMany(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+		}
+	}
+
+	public RamCpuSettingsModel getRamCpuSetting(int instanceID) {
+		synchronized (ramcpusettingslock) {
+
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+			final Document document = new Document();
+
+			document.append("ramcpusetting", "ramcpusetting");
+			document.append("instanceID", instanceID);
+
+			final FindIterable<Document> result;
+
+			try {
+				result = collection.find(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+			if (result.first() == null) {
+				return null;
+
+			} else {
+
+				Document temp = result.first();
+
+				String nodeName = "" + temp.get("nodeName").toString();
+
+				return new RamCpuSettingsModel(nodeName, instanceID);
+
+			}
+		}
+
 	}
 }
