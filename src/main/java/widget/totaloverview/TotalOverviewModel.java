@@ -1,33 +1,35 @@
-package net.explorviz.extension.dashboard.model;
+package widget.totaloverview;
 
 import com.github.jasminb.jsonapi.annotations.Type;
 
-@Type("totaloverviewwidget")
-public class TotalOverviewWidgetModel extends BaseModel {
+import net.explorviz.extension.dashboard.model.BaseModel;
 
-	private String name;
+@Type("totaloverviewwidget")
+public class TotalOverviewModel extends BaseModel {
+
+	private long timestamp;
 	private int numberOfSystems;
 	private int numberOfNodes;
 	private int numberOfApplications;
 
-	public TotalOverviewWidgetModel() {
+	public TotalOverviewModel() {
 		// default constructor for JSON API parsing
 	}
 
-	public TotalOverviewWidgetModel(final String name, final int numberOfSystems, final int numberOfNodes,
+	public TotalOverviewModel(final long timestamp, final int numberOfSystems, final int numberOfNodes,
 			final int numberOfApplications) {
-		this.name = name;
+		this.timestamp = timestamp;
 		this.numberOfSystems = numberOfSystems;
 		this.numberOfNodes = numberOfNodes;
 		this.numberOfApplications = numberOfApplications;
 	}
 
-	public String getName() {
-		return name;
+	public long getTimestamp() {
+		return timestamp;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public int getNumberOfSystems() {
@@ -52,6 +54,11 @@ public class TotalOverviewWidgetModel extends BaseModel {
 
 	public void setNumberOfApplications(int numberOfApplications) {
 		this.numberOfApplications = numberOfApplications;
+	}
+
+	public String toString() {
+		return "{timestamp: " + timestamp + ", numberOfSystems: " + numberOfSystems + ", numberOfNodes: "
+				+ numberOfNodes + ", numberOfApplications: " + numberOfApplications + "}";
 	}
 
 }

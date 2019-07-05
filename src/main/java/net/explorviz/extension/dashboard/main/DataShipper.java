@@ -2,7 +2,6 @@ package net.explorviz.extension.dashboard.main;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.explorviz.shared.landscape.model.application.Clazz;
 import net.explorviz.shared.landscape.model.application.Component;
 import net.explorviz.shared.landscape.model.landscape.Landscape;
@@ -15,6 +14,8 @@ import widget.programminglanguage.ProgrammingLanguagesModel;
 import widget.programminglanguage.ProgrammingLanguagesService;
 import widget.ramcpu.RamCpuModel;
 import widget.ramcpu.RamCpuService;
+import widget.totaloverview.TotalOverviewModel;
+import widget.totaloverview.TotalOverviewService;
 import widget.totalrequests.TotalRequestsService;
 
 public class DataShipper {
@@ -36,26 +37,32 @@ public class DataShipper {
 	private List<RamCpuModel> ramCpuModelList = new ArrayList<RamCpuModel>();
 
 	public void update(Landscape l) {
-		// java.lang.System.out.println(l.get);
+
 		TotalRequestsService.getInstance().update(l.getId(), l.getTimestamp().getTotalRequests(),
 				l.getTimestamp().getTimestamp());
 
 		activeClassInstances = new ArrayList<ActiveClassInstancesModel>();
 		programmingLanguageList = new ArrayList<ProgrammingLanguagesModel>();
 		ramCpuModelList = new ArrayList<RamCpuModel>();
+		
+		TotalOverviewModel totalOverviewModel = new TotalOverviewModel(0,0,0,0);
+		totalOverviewModel.setTimestamp(l.getTimestamp().getTimestamp());
 
 		List<System> systems = l.getSystems();
-		// java.lang.System.out.println("Systems: " + systems.size());
+		//java.lang.System.out.println("Systems: " + systems.size());
+		totalOverviewModel.setNumberOfSystems(systems.size());
 
 		for (int i = 0; i < systems.size(); i++) {
 
 			List<NodeGroup> nodeGroups = systems.get(i).getNodeGroups();
-			// java.lang.System.out.println("NodeGroups: " + nodeGroups.size());
+			//java.lang.System.out.println("NodeGroups: " + nodeGroups.size());
 
 			for (int j = 0; j < nodeGroups.size(); j++) {
 
 				List<Node> nodes = nodeGroups.get(j).getNodes();
-				// java.lang.System.out.println("Nodes: " + nodes.size());
+				//java.lang.System.out.println("Nodes: " + nodes.size());
+				
+				totalOverviewModel.setNumberOfNodes(nodes.size() + totalOverviewModel.getNumberOfNodes());
 
 				// Nodes
 				for (int k = 0; k < nodes.size(); k++) {
@@ -70,8 +77,10 @@ public class DataShipper {
 
 					List<net.explorviz.shared.landscape.model.application.Application> applications = nodes.get(k)
 							.getApplications();
-					// java.lang.System.out.println("Applications: " + applications.size());
+					//java.lang.System.out.println("Applications: " + applications.size());
 
+					totalOverviewModel.setNumberOfApplications(applications.size() + totalOverviewModel.getNumberOfApplications());
+					
 					// Applications
 					for (int n = 0; n < applications.size(); n++) {
 
@@ -94,6 +103,7 @@ public class DataShipper {
 		ActiveClassInstancesService.getInstance().update(activeClassInstances);
 		ProgrammingLanguagesService.getInstance().update(programmingLanguageList);
 		RamCpuService.getInstance().update(ramCpuModelList);
+		TotalOverviewService.getInstance().update(totalOverviewModel);
 	}
 
 	private void checkComponents(List<Component> c, Landscape l) {

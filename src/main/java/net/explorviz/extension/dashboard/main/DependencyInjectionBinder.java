@@ -3,11 +3,10 @@ package net.explorviz.extension.dashboard.main;
 import javax.inject.Singleton;
 
 import net.explorviz.extension.dashboard.services.ClazzCommunicationWidgetService;
-import net.explorviz.extension.dashboard.services.DummyService;
 import net.explorviz.extension.dashboard.services.KafkaLandscapeExchangeService;
 import net.explorviz.extension.dashboard.services.LandscapeSerializationHelper;
-import net.explorviz.extension.dashboard.services.TotalOverviewWidgetService;
 import net.explorviz.shared.common.injection.CommonDependencyInjectionBinder;
+
 
 
 /**
@@ -23,10 +22,6 @@ public class DependencyInjectionBinder extends CommonDependencyInjectionBinder {
     super.configure();
 
     // Service-specific DI
-    
-    this.bind(DummyService.class).to(DummyService.class).in(Singleton.class);
-    
-    this.bind(TotalOverviewWidgetService.class).to(TotalOverviewWidgetService.class).in(Singleton.class);
     
     this.bind(ClazzCommunicationWidgetService.class).to(ClazzCommunicationWidgetService.class).in(Singleton.class);
     

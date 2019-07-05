@@ -2,12 +2,7 @@ package net.explorviz.extension.dashboard.main;
 
 import net.explorviz.extension.dashboard.model.ClazzCommunicationListModel;
 import net.explorviz.extension.dashboard.model.ClazzCommunicationModel;
-import net.explorviz.extension.dashboard.model.DummyModel;
-import net.explorviz.extension.dashboard.model.SubDummyModel;
-import net.explorviz.extension.dashboard.model.TotalOverviewWidgetModel;
 import net.explorviz.extension.dashboard.resources.ClazzCommunicationWidgetResource;
-import net.explorviz.extension.dashboard.resources.TestResource;
-import net.explorviz.extension.dashboard.resources.TotalOverviewWidgetResource;
 import net.explorviz.shared.common.provider.GenericTypeFinder;
 import net.explorviz.shared.common.provider.JsonApiListProvider;
 import net.explorviz.shared.common.provider.JsonApiProvider;
@@ -24,6 +19,8 @@ import widget.ramcpu.RamCpuModel;
 import widget.ramcpu.RamCpuResource;
 import widget.ramcpu.RamCpuSettingsModel;
 import widget.ramcpu.RamCpuSettingsResource;
+import widget.totaloverview.TotalOverviewModel;
+import widget.totaloverview.TotalOverviewResource;
 import widget.totalrequests.TotalRequestsModel;
 import widget.totalrequests.TotalRequestsResource;
 
@@ -36,10 +33,7 @@ public class Application extends ResourceConfig {
 
 	public Application() {
 
-		GenericTypeFinder.getTypeMap().put("DummyModel", DummyModel.class);
-		GenericTypeFinder.getTypeMap().put("SubDummyModel", SubDummyModel.class);
-
-		GenericTypeFinder.getTypeMap().put("TotalOverviewWidgetModel", TotalOverviewWidgetModel.class);
+		GenericTypeFinder.getTypeMap().put("TotalOverviewModel", TotalOverviewModel.class);
 		GenericTypeFinder.getTypeMap().put("ClazzCommunicationModel", ClazzCommunicationModel.class);
 		GenericTypeFinder.getTypeMap().put("ClazzCommunicationListModel", ClazzCommunicationListModel.class);
 		GenericTypeFinder.getTypeMap().put("ActiveClassInstancesModel", ActiveClassInstancesModel.class);
@@ -69,8 +63,7 @@ public class Application extends ResourceConfig {
 		this.register(JsonApiListProvider.class);
 
 		// register the Resources
-		register(TestResource.class);
-		register(TotalOverviewWidgetResource.class);
+		register(TotalOverviewResource.class);
 		register(ClazzCommunicationWidgetResource.class);
 		register(ActiveClassInstancesResource.class);
 		register(TotalRequestsResource.class);

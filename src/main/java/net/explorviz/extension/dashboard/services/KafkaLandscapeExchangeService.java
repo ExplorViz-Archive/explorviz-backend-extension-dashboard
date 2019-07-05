@@ -58,8 +58,7 @@ public class KafkaLandscapeExchangeService implements Runnable {
     this.kafkaConsumer = new KafkaConsumer<>(properties);
   }
   
-  @Inject 
-  private TotalOverviewWidgetService totalOverviewWidgetService;
+
   
   @Inject
   private ClazzCommunicationWidgetService clazzCommunicationWidgetService;
@@ -92,8 +91,7 @@ public class KafkaLandscapeExchangeService implements Runnable {
 
         // you may persist the landscape here
         
-        
-        totalOverviewWidgetService.update(l);
+             
         clazzCommunicationWidgetService.update(l);
         
         DataShipper.getInstance().update(l);

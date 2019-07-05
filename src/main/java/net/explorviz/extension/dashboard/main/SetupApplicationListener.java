@@ -4,17 +4,12 @@ import javax.inject.Inject;
 import javax.servlet.annotation.WebListener;
 
 import net.explorviz.extension.dashboard.model.ClazzCommunicationModel;
-import net.explorviz.extension.dashboard.model.DummyModel;
-import net.explorviz.extension.dashboard.model.TotalOverviewWidgetModel;
 import net.explorviz.extension.dashboard.services.ClazzCommunicationWidgetService;
-import net.explorviz.extension.dashboard.services.DummyService;
 import net.explorviz.extension.dashboard.services.KafkaLandscapeExchangeService;
-import net.explorviz.extension.dashboard.services.TotalOverviewWidgetService;
 import net.explorviz.shared.common.idgen.IdGenerator;
 import widget.activeclassinstances.ActiveClassInstancesModel;
 import widget.activeclassinstances.ActiveClassInstancesService;
 import widget.totalrequests.TotalRequestsModel;
-
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
 import org.glassfish.jersey.server.monitoring.ApplicationEvent.Type;
 import org.glassfish.jersey.server.monitoring.ApplicationEventListener;
@@ -34,11 +29,7 @@ public class SetupApplicationListener implements ApplicationEventListener {
 	@Inject
 	private KafkaLandscapeExchangeService landscapeExchangeService;
 
-	@Inject
-	private DummyService dummyService;
 
-	@Inject
-	private TotalOverviewWidgetService totalOverviewWidgetService;
 
 	@Inject
 	private IdGenerator idGenerator;
@@ -75,11 +66,6 @@ public class SetupApplicationListener implements ApplicationEventListener {
 		new Thread(this.landscapeExchangeService).start();
 
 		// erstmal so !?
-		DummyModel.initialize(this.idGenerator);
-		dummyService.startMyDummyStuff();
-
-		TotalOverviewWidgetModel.initialize(this.idGenerator);
-		totalOverviewWidgetService.start();
 
 		ClazzCommunicationModel.initialize(this.idGenerator);
 		clazzCommunicationWidgetService.start();
