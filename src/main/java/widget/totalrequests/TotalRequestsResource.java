@@ -45,6 +45,8 @@ public class TotalRequestsResource {
 		{
 			return TotalRequestsService.getInstance().getRecentModels();
 		}
+		
+		
 
 		return list;
 
