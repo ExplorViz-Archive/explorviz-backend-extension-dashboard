@@ -12,6 +12,9 @@ import net.explorviz.shared.security.filters.AuthorizationFilter;
 import net.explorviz.shared.security.filters.CorsResponseFilter;
 import widget.activeclassinstances.ActiveClassInstancesModel;
 import widget.activeclassinstances.ActiveClassInstancesResource;
+import widget.eventlog.EventLogModel;
+import widget.eventlog.EventLogResource;
+import widget.eventlog.EventLogWrapperModel;
 import widget.programminglanguage.ProgrammingLanguagesModel;
 import widget.programminglanguage.ProgrammingLanguagesOccurrenceModel;
 import widget.programminglanguage.ProgrammingLanguagesResource;
@@ -44,6 +47,8 @@ public class Application extends ResourceConfig {
 		GenericTypeFinder.getTypeMap().put("RamCpuModel", RamCpuModel.class);
 		GenericTypeFinder.getTypeMap().put("InstantiatedWidgetModel", InstantiatedWidgetModel.class);
 		GenericTypeFinder.getTypeMap().put("RamCpuSettingsModel", RamCpuSettingsModel.class);
+		GenericTypeFinder.getTypeMap().put("EventLogModel", EventLogModel.class);
+		GenericTypeFinder.getTypeMap().put("EventLogWrapperModel", EventLogWrapperModel.class);
 
 		// register Landscape Model classes, since we want to use them
 		TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
@@ -71,6 +76,7 @@ public class Application extends ResourceConfig {
 		register(RamCpuResource.class);
 		register(InstantiatedWidgetResource.class);
 		register(RamCpuSettingsResource.class);
+		register(EventLogResource.class);
 
 		// Starting point for your DI-based extension
 		this.register(SetupApplicationListener.class);

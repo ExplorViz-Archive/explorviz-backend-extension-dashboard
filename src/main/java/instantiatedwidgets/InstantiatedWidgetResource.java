@@ -23,7 +23,7 @@ public class InstantiatedWidgetResource {
 
 	@GET
 	@Produces(MEDIA_TYPE)
-	public List<InstantiatedWidgetModel> getAll(@DefaultValue("0") @QueryParam("userID") long userID) {
+	public List<InstantiatedWidgetModel> getAll(@DefaultValue("0") @QueryParam("userID") String userID) {
 
 		System.out.println("Get Request InstantiatedWidgetModel: UserID -> " + userID);
 

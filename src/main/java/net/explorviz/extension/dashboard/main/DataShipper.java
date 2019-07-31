@@ -10,6 +10,7 @@ import net.explorviz.shared.landscape.model.landscape.NodeGroup;
 import net.explorviz.shared.landscape.model.landscape.System;
 import widget.activeclassinstances.ActiveClassInstancesModel;
 import widget.activeclassinstances.ActiveClassInstancesService;
+import widget.eventlog.EventLogService;
 import widget.programminglanguage.ProgrammingLanguagesModel;
 import widget.programminglanguage.ProgrammingLanguagesService;
 import widget.ramcpu.RamCpuModel;
@@ -37,7 +38,9 @@ public class DataShipper {
 	private List<RamCpuModel> ramCpuModelList = new ArrayList<RamCpuModel>();
 
 	public void update(Landscape l) {
-
+		
+		EventLogService.getInstance().update(l.getTimestamp().getTimestamp(),l.getEvents());
+		
 		TotalRequestsService.getInstance().update(l.getId(), l.getTimestamp().getTotalRequests(),
 				l.getTimestamp().getTimestamp());
 

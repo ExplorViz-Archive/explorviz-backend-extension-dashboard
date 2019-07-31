@@ -58,7 +58,7 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 	private void startExtension() {
 		LOGGER.info("* * * * * * * * * * * * * * * * * * *\n");
-		LOGGER.info("Dummy Extension Servlet initialized.\n");
+		LOGGER.info("Dashboard Extension Servlet initialized.\n");
 		LOGGER.info("* * * * * * * * * * * * * * * * * * *");
 
 		// add your DI injected code here for full DI context access

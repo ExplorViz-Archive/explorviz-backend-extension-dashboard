@@ -18,7 +18,7 @@ public class InstantiatedWidgetService {
 		return InstantiatedWidgetService.instance;
 	}
 
-	public List<InstantiatedWidgetModel> getInstantiatedWidgets(long userID) {
+	public List<InstantiatedWidgetModel> getInstantiatedWidgets(String userID) {
 
 		return MongoDashboardRepository.getInstance().getInstantiatedWidgets(userID);
 
@@ -28,7 +28,7 @@ public class InstantiatedWidgetService {
 		MongoDashboardRepository.getInstance().saveInstantiatedWidget(model);
 	}
 	
-	public void deleteInstantiatedWidgets(Long userID) {
+	public void deleteInstantiatedWidgets(String userID) {
 		MongoDashboardRepository.getInstance().deleteInstantiatedWidgets(userID);
 	}
 
