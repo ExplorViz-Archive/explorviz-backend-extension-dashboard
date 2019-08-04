@@ -27,10 +27,16 @@ public class EventLogService {
 
 	public void update(long timestamp, final List<Event> list) {
 
-		List<EventLogModel> temp = mapEvents(timestamp, list);
+		if (list.size() > 0) {
+			List<EventLogModel> temp = mapEvents(timestamp, list);
+			EventLogInfoModel wrapper = new EventLogInfoModel(timestamp, list.size());
 
-		currentLogs = new ArrayList<>(temp);
-		MongoDashboardRepository.getInstance().saveEventLogs(temp);
+			currentLogs = new ArrayList<>(temp);
+
+			MongoDashboardRepository.getInstance().saveEventLogs(temp);
+			MongoDashboardRepository.getInstance().saveEventLogInfo(wrapper);
+		}
+
 	}
 
 	public List<EventLogModel> getCurrentModel() {
@@ -38,18 +44,24 @@ public class EventLogService {
 
 	}
 
-	public List<EventLogModel> getAllModels() {
-		return MongoDashboardRepository.getInstance().getEventLogs();
-	}
-
 	private List<EventLogModel> mapEvents(long timestamp, final List<Event> list) {
 		List<EventLogModel> result = new ArrayList<EventLogModel>();
 		for (int i = 0; i < list.size(); i++) {
-			result.add(new EventLogModel(list.get(i).getTimestamp(), list.get(i).getEventType(),
+			result.add(new EventLogModel(timestamp, list.get(i).getTimestamp(), list.get(i).getEventType(),
 					list.get(i).getEventMessage()));
 		}
 
 		return result;
+	}
+
+	public List<EventLogModel> getEventLogModels(String timestampLandscape) {
+		//MongoDashboardRepository.getInstance().printDatabase();
+		//MongoDashboardRepository.getInstance().test(timestampLandscape);
+		return MongoDashboardRepository.getInstance().getEventLogs(timestampLandscape);	
+	}
+
+	public List<EventLogInfoModel> getInfoModels() {
+		return MongoDashboardRepository.getInstance().getEventInfos();
 	}
 
 }

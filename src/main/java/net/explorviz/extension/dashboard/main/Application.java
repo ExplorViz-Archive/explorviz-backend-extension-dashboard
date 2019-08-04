@@ -14,7 +14,8 @@ import widget.activeclassinstances.ActiveClassInstancesModel;
 import widget.activeclassinstances.ActiveClassInstancesResource;
 import widget.eventlog.EventLogModel;
 import widget.eventlog.EventLogResource;
-import widget.eventlog.EventLogWrapperModel;
+import widget.eventlog.EventLogInfoModel;
+import widget.eventlog.EventLogInfoResource;
 import widget.programminglanguage.ProgrammingLanguagesModel;
 import widget.programminglanguage.ProgrammingLanguagesOccurrenceModel;
 import widget.programminglanguage.ProgrammingLanguagesResource;
@@ -48,7 +49,7 @@ public class Application extends ResourceConfig {
 		GenericTypeFinder.getTypeMap().put("InstantiatedWidgetModel", InstantiatedWidgetModel.class);
 		GenericTypeFinder.getTypeMap().put("RamCpuSettingsModel", RamCpuSettingsModel.class);
 		GenericTypeFinder.getTypeMap().put("EventLogModel", EventLogModel.class);
-		GenericTypeFinder.getTypeMap().put("EventLogWrapperModel", EventLogWrapperModel.class);
+		GenericTypeFinder.getTypeMap().put("EventLogInfoModel", EventLogInfoModel.class);
 
 		// register Landscape Model classes, since we want to use them
 		TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
@@ -77,6 +78,7 @@ public class Application extends ResourceConfig {
 		register(InstantiatedWidgetResource.class);
 		register(RamCpuSettingsResource.class);
 		register(EventLogResource.class);
+		register(EventLogInfoResource.class);
 
 		// Starting point for your DI-based extension
 		this.register(SetupApplicationListener.class);

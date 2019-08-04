@@ -1,5 +1,9 @@
 package persistence;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,10 +13,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.operation.OrderBy;
 
 import instantiatedwidgets.InstantiatedWidgetModel;
 import net.explorviz.shared.landscape.model.event.EEventType;
+import widget.eventlog.EventLogInfoModel;
 import widget.eventlog.EventLogModel;
 import widget.ramcpu.RamCpuSettingsModel;
 import widget.totalrequests.TotalRequestsModel;
@@ -79,7 +85,7 @@ public class MongoDashboardRepository {
 
 			final Document dashboardDocument = new Document();
 
-			dashboardDocument.append("totalrequests", "totalrequests");
+			dashboardDocument.append("type", "totalrequests");
 			dashboardDocument.append("landscapeID", landscapeID);
 			dashboardDocument.append("totalRequests", totalRequests);
 			dashboardDocument.append("timestamp", timestamp);
@@ -99,7 +105,7 @@ public class MongoDashboardRepository {
 
 			final Document dashboardDocument = new Document();
 
-			dashboardDocument.append("totalrequests", "totalrequests");
+			dashboardDocument.append("type", "totalrequests");
 			dashboardDocument.append("landscapeID", landscapeID);
 
 			final FindIterable<Document> result = dashboardCollection.find(dashboardDocument);
@@ -132,7 +138,7 @@ public class MongoDashboardRepository {
 
 			final Document dashboardDocument = new Document();
 
-			dashboardDocument.append("totalrequests", "totalrequests");
+			dashboardDocument.append("type", "totalrequests");
 
 			final FindIterable<Document> result = dashboardCollection.find(dashboardDocument).limit(1)
 					.sort(new BasicDBObject("_id", OrderBy.DESC.getIntRepresentation())).limit(1);
@@ -165,7 +171,7 @@ public class MongoDashboardRepository {
 
 			final Document dashboardDocument = new Document();
 
-			dashboardDocument.append("totalrequests", "totalrequests");
+			dashboardDocument.append("type", "totalrequests");
 
 			final FindIterable<Document> result = dashboardCollection.find(dashboardDocument);
 
@@ -209,7 +215,7 @@ public class MongoDashboardRepository {
 			for (int i = 0; i < instantiatedWidgets.size(); i++) {
 				final Document document = new Document();
 
-				document.append("instantiatedwidget", "instantiatedwidget");
+				document.append("type", "instantiatedwidget");
 				document.append("userID", instantiatedWidgets.get(i).getUserID());
 				document.append("widgetName", instantiatedWidgets.get(i).getWidgetName());
 				document.append("instanceID", instantiatedWidgets.get(i).getInstanceID());
@@ -233,7 +239,7 @@ public class MongoDashboardRepository {
 
 			final Document document = new Document();
 
-			document.append("instantiatedwidget", "instantiatedwidget");
+			document.append("type", "instantiatedwidget");
 			document.append("userID", widget.getUserID());
 			document.append("widgetName", widget.getWidgetName());
 			document.append("instanceID", widget.getInstanceID());
@@ -262,7 +268,7 @@ public class MongoDashboardRepository {
 
 			final Document document = new Document();
 
-			document.append("instantiatedwidget", "instantiatedwidget");
+			document.append("type", "instantiatedwidget");
 			document.append("userID", userID);
 
 			final FindIterable<Document> result;
@@ -330,7 +336,7 @@ public class MongoDashboardRepository {
 
 			final Document document = new Document();
 
-			document.append("ramcpusetting", "ramcpusetting");
+			document.append("type", "ramcpusetting");
 			document.append("nodeName", setting.getNodeName());
 			document.append("instanceID", setting.getInstanceID());
 
@@ -349,7 +355,7 @@ public class MongoDashboardRepository {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 			final Document document = new Document();
 
-			document.append("ramcpusetting", "ramcpusetting");
+			document.append("type", "ramcpusetting");
 			document.append("instanceID", instanceID);
 
 			try {
@@ -366,7 +372,7 @@ public class MongoDashboardRepository {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 			final Document document = new Document();
 
-			document.append("ramcpusetting", "ramcpusetting");
+			document.append("type", "ramcpusetting");
 			document.append("instanceID", instanceID);
 
 			final FindIterable<Document> result;
@@ -402,13 +408,15 @@ public class MongoDashboardRepository {
 			for (int i = 0; i < eventLogModels.size(); i++) {
 				final Document document = new Document();
 
-				document.append("eventlog", "eventlog");
+				document.append("type", "eventlog");
+				document.append("timestampLandscape", eventLogModels.get(i).getTimestampLandscape());
 				document.append("timestampEvent", eventLogModels.get(i).getTimestampEvent());
 				document.append("eventType", eventLogModels.get(i).getEventType().toString());
 				document.append("eventMessage", eventLogModels.get(i).getEventMessage());
 
 				try {
 					collection.insertOne(document);
+					// System.out.println("saveEventLogs");
 				} catch (final MongoException e) {
 					throw e;
 				}
@@ -417,16 +425,78 @@ public class MongoDashboardRepository {
 
 	}
 
-	public List<EventLogModel> getEventLogs() {
+	public List<EventLogModel> getEventLogs(String timestampLandscape) {
+		synchronized (eventloglock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			BasicDBObject orQuery = new BasicDBObject();
+			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+			obj.add(new BasicDBObject("type", "eventlog"));
+			obj.add(new BasicDBObject("timestampLandscape", Long.parseLong(timestampLandscape)));
+			orQuery.put("$and", obj);			
+			FindIterable<Document> result = collection.find(orQuery);
+			
+			
+			List<EventLogModel> list = new ArrayList<EventLogModel>();
+
+			for (Iterator<Document> i = result.iterator(); i.hasNext();) {
+
+				Document temp = (Document) i.next();
+
+				if (temp.get("timestampLandscape") != null && temp.get("timestampEvent") != null
+						&& temp.get("eventType") != null && temp.get("eventMessage") != null) {
+
+					long rtimestampLandscape = Long.parseLong(temp.get("timestampLandscape").toString());
+					long timestampEvent = Long.parseLong(temp.get("timestampEvent").toString());
+					EEventType eventType = EEventType.valueOf(temp.get("eventType").toString());
+					String eventMessage = temp.get("eventMessage").toString();
+
+					list.add(new EventLogModel(rtimestampLandscape, timestampEvent, eventType, eventMessage));
+
+				} else {
+
+					return null;
+				}
+
+			}
+
+			return list;
+
+		}
+	}
+	
+	
+
+	public void saveEventLogInfo(EventLogInfoModel wrapper) {
 		synchronized (eventloglock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
 			final Document document = new Document();
 
-			document.append("eventlog", "eventlog");
+			document.append("type", "eventloginfo");
+			document.append("timestampLandscape", wrapper.getTimestampLandscape());
+			document.append("amountEvents", wrapper.getAmountEvents());
+
+			try {
+				collection.insertOne(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+		}
+
+	}
+
+	public List<EventLogInfoModel> getEventInfos() {
+		synchronized (eventloglock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			document.append("type", "eventloginfo");
 
 			final FindIterable<Document> result;
-			List<EventLogModel> list = new ArrayList<EventLogModel>();
+			List<EventLogInfoModel> list = new ArrayList<EventLogInfoModel>();
 
 			try {
 				result = collection.find(document);
@@ -442,15 +512,12 @@ public class MongoDashboardRepository {
 
 					Document temp = (Document) i.next();
 
-					if (temp.get("timestampLandscape") != null && temp.get("timestampEvent") != null
-							&& temp.get("eventType") != null && temp.get("eventMessage") != null) {
+					if (temp.get("timestampLandscape") != null && temp.get("amountEvents") != null) {
 
 						long timestampLandscape = Long.parseLong(temp.get("timestampLandscape").toString());
-						long timestampEvent = Long.parseLong(temp.get("timestampLandscape").toString());
-						EEventType eventType = EEventType.valueOf(temp.get("eventType").toString());
-						String eventMessage = temp.get("eventMessage").toString();
+						int amountEvents = Integer.parseInt(temp.get("amountEvents").toString());
 
-						list.add(new EventLogModel(timestampEvent, eventType, eventMessage));
+						list.add(new EventLogInfoModel(timestampLandscape, amountEvents));
 
 					} else {
 
@@ -463,5 +530,44 @@ public class MongoDashboardRepository {
 
 			}
 		}
+	}
+
+	public void printDatabase() {
+		PrintStream ps_console = System.out;
+		try {
+			// Store console print stream.
+			//PrintStream ps_console = System.out;
+
+			File file = new File("file.txt");
+			FileOutputStream fos;
+
+			fos = new FileOutputStream(file);
+
+			// Create new print stream for file.
+			PrintStream ps = new PrintStream(fos);
+
+			// Set file print stream.
+			System.setOut(ps);
+
+			// Set console print stream.
+			//System.setOut(ps_console);
+			System.out.println("Console again !!");
+
+			System.out.println("printDatabase");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		MongoCursor<Document> cursor = mongoHelper.getDashboardCollection().find().iterator();
+		try {
+			while (cursor.hasNext()) {
+				System.out.println(cursor.next().toJson());
+			}
+		} finally {
+			cursor.close();
+		}
+		
+		System.setOut(ps_console);
 	}
 }
