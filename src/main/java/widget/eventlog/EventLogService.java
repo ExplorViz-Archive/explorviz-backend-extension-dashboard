@@ -60,8 +60,8 @@ public class EventLogService {
 		return MongoDashboardRepository.getInstance().getEventLogs(timestampLandscape);	
 	}
 
-	public List<EventLogInfoModel> getInfoModels() {
-		return MongoDashboardRepository.getInstance().getEventInfos();
+	public List<EventLogInfoModel> getInfoModels(int entries) {
+		return MongoDashboardRepository.getInstance().getEventInfos(entries);
 	}
 
 }

@@ -20,6 +20,7 @@ import instantiatedwidgets.InstantiatedWidgetModel;
 import net.explorviz.shared.landscape.model.event.EEventType;
 import widget.eventlog.EventLogInfoModel;
 import widget.eventlog.EventLogModel;
+import widget.eventlog.EventLogSettingsModel;
 import widget.ramcpu.RamCpuSettingsModel;
 import widget.totalrequests.TotalRequestsModel;
 
@@ -487,7 +488,7 @@ public class MongoDashboardRepository {
 
 	}
 
-	public List<EventLogInfoModel> getEventInfos() {
+	public List<EventLogInfoModel> getEventInfos(int entries) {
 		synchronized (eventloglock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
@@ -499,7 +500,7 @@ public class MongoDashboardRepository {
 			List<EventLogInfoModel> list = new ArrayList<EventLogInfoModel>();
 
 			try {
-				result = collection.find(document);
+				result = collection.find(document).sort(new BasicDBObject("_id",-1)).limit(entries);
 			} catch (final MongoException e) {
 				throw e;
 			}
@@ -570,4 +571,78 @@ public class MongoDashboardRepository {
 		
 		System.setOut(ps_console);
 	}
+
+
+
+	private Object eventlogsettingslock = new Object();;
+
+	public void saveEventLogSetting(EventLogSettingsModel setting) {
+		synchronized (eventlogsettingslock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			document.append("type", "eventlogsetting");
+			document.append("entries", setting.getEntries());
+
+			deleteRamCpuSetting(setting.getInstanceID());
+
+			try {
+				collection.insertOne(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+		}
+	}
+
+	public void deleteEventLogSetting(int instanceID) {
+		synchronized (eventlogsettingslock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+			final Document document = new Document();
+
+			document.append("type", "eventlogsetting");
+			document.append("instanceID", instanceID);
+
+			try {
+				collection.deleteMany(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+		}
+	}
+
+	public EventLogSettingsModel getEventLogSetting(int instanceID) {
+		synchronized (eventlogsettingslock) {
+
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+			final Document document = new Document();
+
+			document.append("type", "eventlogsetting");
+			document.append("instanceID", instanceID);
+
+			final FindIterable<Document> result;
+
+			try {
+				result = collection.find(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+			if (result.first() == null) {
+				return null;
+
+			} else {
+
+				Document temp = result.first();
+
+				int entries = Integer.parseInt(temp.get("entries").toString());
+
+				return new EventLogSettingsModel(instanceID,entries);
+
+			}
+		}
+
+	}
+
+
 }
