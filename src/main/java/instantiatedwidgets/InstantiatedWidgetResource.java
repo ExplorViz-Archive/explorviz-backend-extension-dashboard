@@ -24,21 +24,21 @@ public class InstantiatedWidgetResource {
 	@GET
 	@Produces(MEDIA_TYPE)
 	public List<InstantiatedWidgetModel> getAll(@DefaultValue("0") @QueryParam("userID") String userID) {
-
-		System.out.println("Get Request InstantiatedWidgetModel: UserID -> " + userID);
-
 		return InstantiatedWidgetService.getInstance().getInstantiatedWidgets(userID);
 
 	}
-	
-	@POST
-    public Response postMsg(InstantiatedWidgetModel model) {
-	 
-		System.out.println("post: " + model.toString());
 
-		
-        InstantiatedWidgetService.getInstance().setInstantiatedWidget(model);
-        return Response.status(200).entity(model).build();
-    }
+	@POST
+	public Response postMsg(InstantiatedWidgetModel model) {
+
+		// if timestamp is set to -1 => delete this model from database
+		if (model.getTimestamp() == -1) {
+			InstantiatedWidgetService.getInstance().deleteInstantiatedWidget(model.getUserID(), model.getInstanceID());
+		} else {
+			// else save the model into the database
+			InstantiatedWidgetService.getInstance().setInstantiatedWidget(model);
+		}
+		return Response.status(200).entity(model).build();
+	}
 
 }

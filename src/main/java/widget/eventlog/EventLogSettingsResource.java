@@ -1,6 +1,5 @@
 package widget.eventlog;
 
-
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -19,19 +18,14 @@ public class EventLogSettingsResource {
 	@GET
 	@Produces(MEDIA_TYPE)
 	public EventLogSettingsModel getSetting(@DefaultValue("0") @QueryParam("instanceID") int instanceID) {
-		System.out.println("GET: " + instanceID);
 		EventLogSettingsModel temp = EventLogSettingsService.getInstance().getSetting(instanceID);
-		System.out.println("GET: " + instanceID);
-		System.out.println(temp.toString());
 		return temp;
 	}
 
 	@POST
 	public Response setSetting(EventLogSettingsModel setting) {
-		System.out.println("POST: " + setting.toString());
 		EventLogSettingsService.getInstance().setSetting(setting);
 		return Response.status(200).entity(setting).build();
 	}
 
 }
-

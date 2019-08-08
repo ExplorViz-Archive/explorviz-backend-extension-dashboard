@@ -34,10 +34,9 @@ public class EventLogSettingsModel extends BaseModel {
 	public void setEntries(int entries) {
 		this.entries = entries;
 	}
-	
+
 	public String toString() {
 		return "EventLogSetting - instanceID: " + this.instanceID + " entries: " + this.entries;
 	}
 
 }
-

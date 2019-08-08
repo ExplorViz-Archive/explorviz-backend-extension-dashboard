@@ -22,7 +22,7 @@ public class TotalRequestsResource {
 		List<TotalRequestsModel> list = new ArrayList<TotalRequestsModel>();
 
 		if (action.equals("default")) {
-			System.out.println("default");
+			//System.out.println("default");
 			TotalRequestsModel model = TotalRequestsService.getInstance().getCurrentModel();
 			if (model != null) {
 				list.add(TotalRequestsService.getInstance().getCurrentModel());
@@ -31,12 +31,12 @@ public class TotalRequestsResource {
 		}
 
 		if (action.equals("all")) {
-			System.out.println("all");
+			//System.out.println("all");
 			return TotalRequestsService.getInstance().getAllModels();
 		}
 		
 		if (action.equals("reduced")) {
-			System.out.println("all");
+			//System.out.println("all");
 			return TotalRequestsService.getInstance().getReducedModels();
 		}
 		

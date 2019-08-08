@@ -224,7 +224,7 @@ public class MongoDashboardRepository {
 				document.append("orderID", instantiatedWidgets.get(i).getOrderID());
 
 				try {
-					deleteInstantiatedWidgets(userID);
+					deleteAllInstantiatedWidgets(userID);
 					collection.insertOne(document);
 				} catch (final MongoException e) {
 					throw e;
@@ -251,7 +251,7 @@ public class MongoDashboardRepository {
 
 			// delete old entrys if we get data with a newer timestamp.
 			if (temp != null && temp.get(0).getTimestamp() != widget.getTimestamp()) {
-				deleteInstantiatedWidgets(widget.getUserID());
+				deleteAllInstantiatedWidgets(widget.getUserID());
 			}
 
 			try {
@@ -314,12 +314,29 @@ public class MongoDashboardRepository {
 		}
 	}
 
-	public void deleteInstantiatedWidgets(String userID) {
+	public void deleteAllInstantiatedWidgets(String userID) {
 		synchronized (instantiatedWidgetslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 			final Document document = new Document();
 
 			document.append("userID", userID);
+
+			try {
+				collection.deleteMany(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+		}
+	}
+	
+	public void deleteInstantiatedWidget(String userID, int instanceID) {
+		synchronized (instantiatedWidgetslock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+			final Document document = new Document();
+
+			document.append("type", "instantiatedwidget");
+			document.append("userID", userID);
+			document.append("instanceID", instanceID);
 
 			try {
 				collection.deleteMany(document);
@@ -417,7 +434,6 @@ public class MongoDashboardRepository {
 
 				try {
 					collection.insertOne(document);
-					// System.out.println("saveEventLogs");
 				} catch (final MongoException e) {
 					throw e;
 				}
@@ -550,11 +566,6 @@ public class MongoDashboardRepository {
 			// Set file print stream.
 			System.setOut(ps);
 
-			// Set console print stream.
-			//System.setOut(ps_console);
-			System.out.println("Console again !!");
-
-			System.out.println("printDatabase");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -583,9 +594,10 @@ public class MongoDashboardRepository {
 			final Document document = new Document();
 
 			document.append("type", "eventlogsetting");
+			document.append("instanceID", setting.getInstanceID());
 			document.append("entries", setting.getEntries());
 
-			deleteRamCpuSetting(setting.getInstanceID());
+			deleteEventLogSetting(setting.getInstanceID());
 
 			try {
 				collection.insertOne(document);

@@ -29,7 +29,11 @@ public class InstantiatedWidgetService {
 	}
 	
 	public void deleteInstantiatedWidgets(String userID) {
-		MongoDashboardRepository.getInstance().deleteInstantiatedWidgets(userID);
+		MongoDashboardRepository.getInstance().deleteAllInstantiatedWidgets(userID);
+	}
+	
+	public void deleteInstantiatedWidget(String userID, int instanceID) {
+		MongoDashboardRepository.getInstance().deleteInstantiatedWidget(userID, instanceID);
 	}
 
 }

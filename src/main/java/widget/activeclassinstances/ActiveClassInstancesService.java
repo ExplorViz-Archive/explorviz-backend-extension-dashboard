@@ -47,7 +47,7 @@ public class ActiveClassInstancesService {
 	}
 
 	public List<ActiveClassInstancesModel> sortByInstances(List<ActiveClassInstancesModel> oldList) {
-		System.out.println("Listsize: " + oldList.size());
+		//System.out.println("Listsize: " + oldList.size());
 		List<ActiveClassInstancesModel> newList = new ArrayList<ActiveClassInstancesModel>();
 
 		while (oldList.size() != 0) {

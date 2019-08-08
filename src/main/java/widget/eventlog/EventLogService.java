@@ -19,10 +19,6 @@ public class EventLogService {
 		return EventLogService.instance;
 	}
 
-	public void start() {
-
-	}
-
 	private List<EventLogModel> currentLogs = new ArrayList<EventLogModel>();
 
 	public void update(long timestamp, final List<Event> list) {
@@ -55,9 +51,7 @@ public class EventLogService {
 	}
 
 	public List<EventLogModel> getEventLogModels(String timestampLandscape) {
-		//MongoDashboardRepository.getInstance().printDatabase();
-		//MongoDashboardRepository.getInstance().test(timestampLandscape);
-		return MongoDashboardRepository.getInstance().getEventLogs(timestampLandscape);	
+		return MongoDashboardRepository.getInstance().getEventLogs(timestampLandscape);
 	}
 
 	public List<EventLogInfoModel> getInfoModels(int entries) {

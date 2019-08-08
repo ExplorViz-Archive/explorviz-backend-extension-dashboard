@@ -17,7 +17,7 @@ public class TotalOverviewService {
 	private TotalOverviewModel model;
 
 	public void update(TotalOverviewModel updatedmodel) {
-		System.out.println("updated: " + updatedmodel.toString());
+		//System.out.println("updated: " + updatedmodel.toString());
 		model = updatedmodel;
 
 	}

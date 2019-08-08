@@ -24,7 +24,6 @@ public class EventLogModel extends BaseModel {
 		this.eventMessage = eventMessage;
 	}
 
-
 	public long getTimestampLandscape() {
 		return timestampLandscape;
 	}
@@ -56,10 +55,10 @@ public class EventLogModel extends BaseModel {
 	public void setEventMessage(String eventMessage) {
 		this.eventMessage = eventMessage;
 	}
-	
-	public String toString() 
-	{
-		return "EventLogModel - timestampEvent: " + timestampEvent + " eventType: " + eventType.toString() + " eventMessage: " + eventMessage;
+
+	public String toString() {
+		return "EventLogModel - timestampEvent: " + timestampEvent + " eventType: " + eventType.toString()
+				+ " eventMessage: " + eventMessage;
 	}
 
 }

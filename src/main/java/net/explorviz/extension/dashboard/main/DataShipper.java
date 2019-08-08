@@ -3,6 +3,7 @@ package net.explorviz.extension.dashboard.main;
 import java.util.ArrayList;
 import java.util.List;
 import net.explorviz.shared.landscape.model.application.Clazz;
+import net.explorviz.shared.landscape.model.application.ClazzCommunication;
 import net.explorviz.shared.landscape.model.application.Component;
 import net.explorviz.shared.landscape.model.landscape.Landscape;
 import net.explorviz.shared.landscape.model.landscape.Node;
@@ -11,6 +12,8 @@ import net.explorviz.shared.landscape.model.landscape.System;
 import widget.activeclassinstances.ActiveClassInstancesModel;
 import widget.activeclassinstances.ActiveClassInstancesService;
 import widget.eventlog.EventLogService;
+import widget.operationresponsetime.OperationResponseTimeModel;
+import widget.operationresponsetime.OperationResponseTimeService;
 import widget.programminglanguage.ProgrammingLanguagesModel;
 import widget.programminglanguage.ProgrammingLanguagesService;
 import widget.ramcpu.RamCpuModel;
@@ -34,37 +37,40 @@ public class DataShipper {
 	}
 
 	private List<ActiveClassInstancesModel> activeClassInstances = new ArrayList<ActiveClassInstancesModel>();
+	private List<OperationResponseTimeModel> operationResponseTimes = new ArrayList<OperationResponseTimeModel>();
+
 	private List<ProgrammingLanguagesModel> programmingLanguageList = new ArrayList<ProgrammingLanguagesModel>();
 	private List<RamCpuModel> ramCpuModelList = new ArrayList<RamCpuModel>();
 
 	public void update(Landscape l) {
-		
-		EventLogService.getInstance().update(l.getTimestamp().getTimestamp(),l.getEvents());
-		
+		long startTime = java.lang.System.currentTimeMillis();
+		EventLogService.getInstance().update(l.getTimestamp().getTimestamp(), l.getEvents());
+
 		TotalRequestsService.getInstance().update(l.getId(), l.getTimestamp().getTotalRequests(),
 				l.getTimestamp().getTimestamp());
 
 		activeClassInstances = new ArrayList<ActiveClassInstancesModel>();
+		operationResponseTimes = new ArrayList<OperationResponseTimeModel>();
 		programmingLanguageList = new ArrayList<ProgrammingLanguagesModel>();
 		ramCpuModelList = new ArrayList<RamCpuModel>();
-		
-		TotalOverviewModel totalOverviewModel = new TotalOverviewModel(0,0,0,0);
+
+		TotalOverviewModel totalOverviewModel = new TotalOverviewModel(0, 0, 0, 0);
 		totalOverviewModel.setTimestamp(l.getTimestamp().getTimestamp());
 
 		List<System> systems = l.getSystems();
-		//java.lang.System.out.println("Systems: " + systems.size());
+		// java.lang.System.out.println("Systems: " + systems.size());
 		totalOverviewModel.setNumberOfSystems(systems.size());
 
 		for (int i = 0; i < systems.size(); i++) {
 
 			List<NodeGroup> nodeGroups = systems.get(i).getNodeGroups();
-			//java.lang.System.out.println("NodeGroups: " + nodeGroups.size());
+			// java.lang.System.out.println("NodeGroups: " + nodeGroups.size());
 
 			for (int j = 0; j < nodeGroups.size(); j++) {
 
 				List<Node> nodes = nodeGroups.get(j).getNodes();
-				//java.lang.System.out.println("Nodes: " + nodes.size());
-				
+				// java.lang.System.out.println("Nodes: " + nodes.size());
+
 				totalOverviewModel.setNumberOfNodes(nodes.size() + totalOverviewModel.getNumberOfNodes());
 
 				// Nodes
@@ -80,10 +86,11 @@ public class DataShipper {
 
 					List<net.explorviz.shared.landscape.model.application.Application> applications = nodes.get(k)
 							.getApplications();
-					//java.lang.System.out.println("Applications: " + applications.size());
+					// java.lang.System.out.println("Applications: " + applications.size());
 
-					totalOverviewModel.setNumberOfApplications(applications.size() + totalOverviewModel.getNumberOfApplications());
-					
+					totalOverviewModel.setNumberOfApplications(
+							applications.size() + totalOverviewModel.getNumberOfApplications());
+
 					// Applications
 					for (int n = 0; n < applications.size(); n++) {
 
@@ -104,9 +111,14 @@ public class DataShipper {
 		}
 
 		ActiveClassInstancesService.getInstance().update(activeClassInstances);
+		OperationResponseTimeService.getInstance().update(operationResponseTimes);
 		ProgrammingLanguagesService.getInstance().update(programmingLanguageList);
 		RamCpuService.getInstance().update(ramCpuModelList);
 		TotalOverviewService.getInstance().update(totalOverviewModel);
+
+		long stopTime = java.lang.System.currentTimeMillis();
+		long elapsedTime = stopTime - startTime;
+		java.lang.System.out.println("Datashipper - Measured execution time: " + elapsedTime + "ms");
 	}
 
 	private void checkComponents(List<Component> c, Landscape l) {
@@ -125,6 +137,28 @@ public class DataShipper {
 							.add(new ActiveClassInstancesModel(l.getId(), clazz.getName(), clazz.getInstanceCount()));
 
 					// java.lang.System.out.println("classe wurde geaddet !");
+
+					if (clazz.getClazzCommunications() != null) {
+						List<ClazzCommunication> clazzCommunications = clazz.getClazzCommunications();
+
+						for (int k = 0; k < clazzCommunications.size(); k++) {
+							ClazzCommunication clazzCommunication = clazzCommunications.get(k);
+							OperationResponseTimeModel temp = new OperationResponseTimeModel(
+									l.getTimestamp().getTimestamp(), clazzCommunication.getOperationName(),
+									clazzCommunication.getAverageResponseTime(),
+									clazzCommunication.getSourceClazz().getFullQualifiedName(),
+									clazzCommunication.getTargetClazz().getFullQualifiedName());
+
+							operationResponseTimes.add(temp);
+							/*
+							 * java.lang.System.out.println(clazzCommunication.getSourceClazz().
+							 * getFullQualifiedName() + "   --->   " +
+							 * clazzCommunication.getTargetClazz().getFullQualifiedName());
+							 */
+							// java.lang.System.out.println(temp.toString());
+						}
+					}
+
 				}
 			}
 

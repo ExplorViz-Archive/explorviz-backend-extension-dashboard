@@ -16,26 +16,10 @@ public class EventLogResource {
 
 	@GET
 	@Produces(MEDIA_TYPE)
-	public List<EventLogModel> getListModel(@DefaultValue("0") @QueryParam("timestampLandscape") String timestampLandscape) {
+	public List<EventLogModel> getListModel(
+			@DefaultValue("0") @QueryParam("timestampLandscape") String timestampLandscape) {
 
-		System.out.println("timestampLandscape: " + timestampLandscape);
 		return EventLogService.getInstance().getEventLogModels(timestampLandscape);
 
 	}
-
-	/*
-	 * @GET
-	 * 
-	 * @Produces(MEDIA_TYPE) public EventLogWrapperModel getListModel() {
-	 * 
-	 * 
-	 * List<EventLogModel> test = new ArrayList<EventLogModel>(); test.add(new
-	 * EventLogModel(1002,EEventType.EXCEPTION, "hallo noob")); test.add(new
-	 * EventLogModel(1003,EEventType.NEWAPPLICATION, "hallo bob"));
-	 * 
-	 * return new EventLogWrapperModel(0, 20, test);
-	 * 
-	 * }
-	 */
-
 }

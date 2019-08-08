@@ -44,7 +44,7 @@ public class ActiveClassInstancesResource {
 		List<ActiveClassInstancesModel> temp = new ArrayList<>(ActiveClassInstancesModel.ActiveClassInstances);
 		
 		
-		System.out.println("temp size: " + temp.size());
+		//System.out.println("temp size: " + temp.size());
 		
 		if(amount >= temp.size()) 
 		{

@@ -44,7 +44,7 @@ public class TotalRequestsService {
 	public List<TotalRequestsModel> getReducedModels() {
 
 		List<TotalRequestsModel> allData = MongoDashboardRepository.getInstance().getAllTotalRequests();
-		System.out.println("Size: " + allData.size());
+		//System.out.println("Size: " + allData.size());
 
 		List<TotalRequestsModel> newList = new ArrayList<TotalRequestsModel>();
 
