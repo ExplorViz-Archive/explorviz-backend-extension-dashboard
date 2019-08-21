@@ -17,9 +17,6 @@ public class ProgrammingLanguagesResource {
 	@GET
 	@Produces(MEDIA_TYPE)
 	public List<ProgrammingLanguagesOccurrenceModel> getListModel(@DefaultValue("default") @QueryParam("action") String action) {
-
-		
-
 		return ProgrammingLanguagesService.getInstance().getCurrentProgrammingLanguagesOccurrence();
 
 	}
