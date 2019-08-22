@@ -6,6 +6,7 @@ import java.util.List;
 public class ActiveClassInstancesService {
 
 	private static ActiveClassInstancesService instance;
+	private List<ActiveClassInstancesModel> activeClassInstances = new ArrayList<ActiveClassInstancesModel>();
 
 	private ActiveClassInstancesService() {
 	}
@@ -17,37 +18,37 @@ public class ActiveClassInstancesService {
 		return ActiveClassInstancesService.instance;
 	}
 
-	public void start() {
-		if (ActiveClassInstancesModel.ActiveClassInstances == null) {
-			ActiveClassInstancesModel.ActiveClassInstances = new ArrayList<ActiveClassInstancesModel>();
 
-			ActiveClassInstancesModel test = new ActiveClassInstancesModel("test_landscape_id123123", "classname_hi",
-					212);
-
-			ActiveClassInstancesModel.ActiveClassInstances.add(test);
-
-			ActiveClassInstancesModel test2 = new ActiveClassInstancesModel("test_landscape_id234234", "classname_ho",
-					5);
-			ActiveClassInstancesModel.ActiveClassInstances.add(test2);
-
-			ActiveClassInstancesModel test3 = new ActiveClassInstancesModel("test_landscape_id77777", "classname_ha",
-					42);
-			ActiveClassInstancesModel.ActiveClassInstances.add(test3);
-		}
-
-	}
 
 	public void update(List<ActiveClassInstancesModel> activeClassInstances) {
+		this.activeClassInstances = activeClassInstances;
+	}
+	
+	public List<ActiveClassInstancesModel> getActiveClassInstances(int amount) {
 
-		// ActiveClassInstancesModel.ActiveClassInstances = new
-		// ArrayList<ActiveClassInstancesModel>();
-		ActiveClassInstancesModel.ActiveClassInstances = activeClassInstances;
+		
+		if(amount == 0) {
+			return activeClassInstances;
+		}
+		
+		List<ActiveClassInstancesModel> temp = new ArrayList<>(activeClassInstances);
+		
+		
 
-		//System.out.println("activeClassInstances Size nach update: " + activeClassInstances.size());
+		
+		if(amount >= temp.size()) 
+		{
+			amount = temp.size();
+		}
+
+	
+		temp = ActiveClassInstancesService.getInstance().sortByInstances(temp);
+		
+		return temp.subList(0, amount);
 	}
 
 	public List<ActiveClassInstancesModel> sortByInstances(List<ActiveClassInstancesModel> oldList) {
-		//System.out.println("Listsize: " + oldList.size());
+
 		List<ActiveClassInstancesModel> newList = new ArrayList<ActiveClassInstancesModel>();
 
 		while (oldList.size() != 0) {
@@ -64,7 +65,7 @@ public class ActiveClassInstancesService {
 			newList.add(oldList.get(index));
 			oldList.remove(index);
 		}
-		//System.out.println("Listsize: " + newList.size());
+
 		return newList;
 	}
 

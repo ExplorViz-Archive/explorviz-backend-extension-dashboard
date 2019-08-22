@@ -133,10 +133,11 @@ public class DataShipper {
 
 					Clazz clazz = clazzes.get(j);
 
-					activeClassInstances
-							.add(new ActiveClassInstancesModel(l.getId(), clazz.getName(), clazz.getInstanceCount()));
+					if (clazz.getInstanceCount() != 0) {
+						activeClassInstances.add(new ActiveClassInstancesModel(l.getTimestamp().getTimestamp(),
+								clazz.getName(), clazz.getInstanceCount()));
 
-					// java.lang.System.out.println("classe wurde geaddet !");
+					}
 
 					if (clazz.getClazzCommunications() != null) {
 						List<ClazzCommunication> clazzCommunications = clazz.getClazzCommunications();

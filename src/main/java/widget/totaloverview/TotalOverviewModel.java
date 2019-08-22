@@ -18,6 +18,7 @@ public class TotalOverviewModel extends BaseModel {
 
 	public TotalOverviewModel(final long timestamp, final int numberOfSystems, final int numberOfNodes,
 			final int numberOfApplications) {
+		super();
 		this.timestamp = timestamp;
 		this.numberOfSystems = numberOfSystems;
 		this.numberOfNodes = numberOfNodes;

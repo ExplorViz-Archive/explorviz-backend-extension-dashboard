@@ -2,13 +2,8 @@ package net.explorviz.extension.dashboard.main;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebListener;
-
-import net.explorviz.extension.dashboard.model.ClazzCommunicationModel;
-import net.explorviz.extension.dashboard.services.ClazzCommunicationWidgetService;
 import net.explorviz.extension.dashboard.services.KafkaLandscapeExchangeService;
 import net.explorviz.shared.common.idgen.IdGenerator;
-import widget.activeclassinstances.ActiveClassInstancesModel;
-import widget.activeclassinstances.ActiveClassInstancesService;
 import widget.totalrequests.TotalRequestsModel;
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
 import org.glassfish.jersey.server.monitoring.ApplicationEvent.Type;
@@ -33,10 +28,6 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 	@Inject
 	private IdGenerator idGenerator;
-
-	@Inject
-	private ClazzCommunicationWidgetService clazzCommunicationWidgetService;
-
 
 	@Override
 	public void onEvent(final ApplicationEvent event) {
@@ -67,14 +58,9 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 		// erstmal so !?
 
-		ClazzCommunicationModel.initialize(this.idGenerator);
-		clazzCommunicationWidgetService.start();
-
-		ActiveClassInstancesModel.initialize(this.idGenerator);
-		ActiveClassInstancesService.getInstance().start();
-		
+	
 		TotalRequestsModel.initialize(this.idGenerator);
-		ActiveClassInstancesService.getInstance().start();
+
 
 	}
 

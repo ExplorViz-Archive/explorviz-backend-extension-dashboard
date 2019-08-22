@@ -1,15 +1,12 @@
 package widget.activeclassinstances;
 
-import java.util.List;
 import com.github.jasminb.jsonapi.annotations.Type;
 import net.explorviz.extension.dashboard.model.BaseModel;
 
 @Type("activeclassinstances")
 public class ActiveClassInstancesModel extends BaseModel {
 
-	public static List<ActiveClassInstancesModel> ActiveClassInstances;
-
-	private String landscapeID;
+	private long timestampLandscape;
 	private String className;
 	private int instances;
 
@@ -17,18 +14,20 @@ public class ActiveClassInstancesModel extends BaseModel {
 		// default constructor for JSON API parsing
 	}
 
-	public ActiveClassInstancesModel(final String landscapeID, final String className, final int instances) {
-		this.landscapeID = landscapeID;
+	public ActiveClassInstancesModel(final long timestampLandscape, final String className, final int instances) {
+		super();
+		this.timestampLandscape = timestampLandscape;
 		this.className = className;
 		this.instances = instances;
 	}
 
-	public String getLandscapeID() {
-		return landscapeID;
+
+	public long getTimestampLandscape() {
+		return timestampLandscape;
 	}
 
-	public void setLandscapeID(String landscapeID) {
-		this.landscapeID = landscapeID;
+	public void setTimestampLandscape(long timestampLandscape) {
+		this.timestampLandscape = timestampLandscape;
 	}
 
 	public String getClassName() {

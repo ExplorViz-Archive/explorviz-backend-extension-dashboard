@@ -15,6 +15,7 @@ public class TotalRequestsModel extends BaseModel {
 	}
 
 	public TotalRequestsModel(final String landscapeID, final int totalRequests, final long timestamp) {
+		super();
 		this.landscapeID = landscapeID;
 		this.totalRequests = totalRequests;
 		this.timestamp = timestamp;
