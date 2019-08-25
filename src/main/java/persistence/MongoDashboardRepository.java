@@ -21,6 +21,8 @@ import net.explorviz.shared.landscape.model.event.EEventType;
 import widget.eventlog.EventLogInfoModel;
 import widget.eventlog.EventLogModel;
 import widget.eventlog.EventLogSettingsModel;
+import widget.operationresponsetime.OperationResponseTimeInfoModel;
+import widget.operationresponsetime.OperationResponseTimeModel;
 import widget.ramcpu.RamCpuSettingsModel;
 import widget.totalrequests.TotalRequestsModel;
 
@@ -328,7 +330,7 @@ public class MongoDashboardRepository {
 			}
 		}
 	}
-	
+
 	public void deleteInstantiatedWidget(String userID, int instanceID) {
 		synchronized (instantiatedWidgetslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -450,10 +452,9 @@ public class MongoDashboardRepository {
 			List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
 			obj.add(new BasicDBObject("type", "eventlog"));
 			obj.add(new BasicDBObject("timestampLandscape", Long.parseLong(timestampLandscape)));
-			orQuery.put("$and", obj);			
+			orQuery.put("$and", obj);
 			FindIterable<Document> result = collection.find(orQuery);
-			
-			
+
 			List<EventLogModel> list = new ArrayList<EventLogModel>();
 
 			for (Iterator<Document> i = result.iterator(); i.hasNext();) {
@@ -481,8 +482,6 @@ public class MongoDashboardRepository {
 
 		}
 	}
-	
-	
 
 	public void saveEventLogInfo(EventLogInfoModel wrapper) {
 		synchronized (eventloglock) {
@@ -516,7 +515,7 @@ public class MongoDashboardRepository {
 			List<EventLogInfoModel> list = new ArrayList<EventLogInfoModel>();
 
 			try {
-				result = collection.find(document).sort(new BasicDBObject("_id",-1)).limit(entries);
+				result = collection.find(document).sort(new BasicDBObject("_id", -1)).limit(entries);
 			} catch (final MongoException e) {
 				throw e;
 			}
@@ -553,7 +552,7 @@ public class MongoDashboardRepository {
 		PrintStream ps_console = System.out;
 		try {
 			// Store console print stream.
-			//PrintStream ps_console = System.out;
+			// PrintStream ps_console = System.out;
 
 			File file = new File("file.txt");
 			FileOutputStream fos;
@@ -579,11 +578,9 @@ public class MongoDashboardRepository {
 		} finally {
 			cursor.close();
 		}
-		
+
 		System.setOut(ps_console);
 	}
-
-
 
 	private Object eventlogsettingslock = new Object();;
 
@@ -649,12 +646,153 @@ public class MongoDashboardRepository {
 
 				int entries = Integer.parseInt(temp.get("entries").toString());
 
-				return new EventLogSettingsModel(instanceID,entries);
+				return new EventLogSettingsModel(instanceID, entries);
 
 			}
 		}
 
 	}
 
+	private Object operationResponseTimelock = new Object();
+
+	public void saveOperationResponseTime(OperationResponseTimeModel model) {
+		synchronized (operationResponseTimelock) {
+			final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
+
+			final Document dashboardDocument = new Document();
+
+			dashboardDocument.append("type", "operationresponsetime");
+			dashboardDocument.append("timestampLandscape", model.getTimestampLandscape());
+			dashboardDocument.append("operationName", model.getOperationName());
+			dashboardDocument.append("averageResponseTime", model.getAverageResponseTime());
+			dashboardDocument.append("sourceClazzFullName", model.getSourceClazzFullName());
+			dashboardDocument.append("targetClazzFullName", model.getTargetClazzFullName());
+
+			try {
+				dashboardCollection.insertOne(dashboardDocument);
+			} catch (final MongoException e) {
+				throw e;
+			}
+		}
+
+	}
+
+	public List<OperationResponseTimeModel> getOperationResponseTime(final Long timestampLandscape, int entries) {
+		synchronized (operationResponseTimelock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			document.append("type", "operationresponsetime");
+			document.append("timestampLandscape", timestampLandscape);
+
+			final FindIterable<Document> result;
+			List<OperationResponseTimeModel> list = new ArrayList<OperationResponseTimeModel>();
+
+			try {
+				result = collection.find(document).sort(new BasicDBObject("_id", -1)).limit(entries);
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+			if (result.first() == null) {
+				return null;
+			} else {
+
+				for (Iterator<Document> i = result.iterator(); i.hasNext();) {
+
+					Document temp = (Document) i.next();
+
+					if (result.first().get("timestampLandscape") != null && result.first().get("operationName") != null
+							&& result.first().get("averageResponseTime") != null
+							&& result.first().get("sourceClazzFullName") != null
+							&& result.first().get("targetClazzFullName") != null) {
+
+						String operationName = "" + temp.get("operationName").toString();
+						float averageResponseTime = Float.parseFloat(temp.get("averageResponseTime").toString());
+						String sourceClazzFullName = "" + temp.get("sourceClazzFullName").toString();
+						String targetClazzFullName = "" + temp.get("targetClazzFullName").toString();
+
+						list.add(new OperationResponseTimeModel(timestampLandscape, operationName, averageResponseTime,
+								sourceClazzFullName, targetClazzFullName));
+
+					} else {
+
+						return null;
+					}
+
+				}
+
+				return list;
+
+			}
+		}
+	}
+
+	public void saveOperationResponseTimeInfo(OperationResponseTimeInfoModel model) {
+		synchronized (operationResponseTimelock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			document.append("type", "operationresponsetimeinfo");
+			document.append("timestampLandscape", model.getTimestampLandscape());
+			document.append("amount", model.getAmount());
+
+			try {
+				collection.insertOne(document);
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+		}
+
+	}
+
+	public List<OperationResponseTimeInfoModel> getOperationResponseTimeInfos(int entries) {
+		synchronized (operationResponseTimelock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			document.append("type", "operationresponsetimeinfo");
+
+			final FindIterable<Document> result;
+			List<OperationResponseTimeInfoModel> list = new ArrayList<OperationResponseTimeInfoModel>();
+
+			try {
+				result = collection.find(document).sort(new BasicDBObject("_id", -1)).limit(entries);
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+			if (result.first() == null) {
+				return list;
+			} else {
+
+				for (Iterator<Document> i = result.iterator(); i.hasNext();) {
+
+					Document temp = (Document) i.next();
+
+					if (temp.get("timestampLandscape") != null && temp.get("amount") != null) {
+
+						long timestampLandscape = Long.parseLong(temp.get("timestampLandscape").toString());
+						int amount = Integer.parseInt(temp.get("amount").toString());
+
+						OperationResponseTimeInfoModel t = new OperationResponseTimeInfoModel(timestampLandscape, amount);
+						list.add(t);
+
+					} else {
+
+						return list;
+					}
+
+				}
+
+				return list;
+
+			}
+		}
+	}
 
 }

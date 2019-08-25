@@ -3,6 +3,8 @@ package widget.operationresponsetime;
 import java.util.ArrayList;
 import java.util.List;
 
+import persistence.MongoDashboardRepository;
+
 public class OperationResponseTimeService {
 
 	private static OperationResponseTimeService instance;
@@ -20,7 +22,43 @@ public class OperationResponseTimeService {
 	private List<OperationResponseTimeModel> operationResponseTimes = new ArrayList<OperationResponseTimeModel>();
 
 	public void update(List<OperationResponseTimeModel> updatedOperationResponseTimes) {
+
+		if (!updatedOperationResponseTimes.isEmpty()) {
+
+			for (OperationResponseTimeModel m : updatedOperationResponseTimes) {
+
+				MongoDashboardRepository.getInstance().saveOperationResponseTime(m);
+			}
+
+			MongoDashboardRepository.getInstance().saveOperationResponseTimeInfo(new OperationResponseTimeInfoModel(updatedOperationResponseTimes.get(0).getTimestampLandscape(),updatedOperationResponseTimes.size()));
+			
+			for(OperationResponseTimeInfoModel m : MongoDashboardRepository.getInstance().getOperationResponseTimeInfos(10)) {
+				System.out.println(m.toString());
+			}
+			
+			List<OperationResponseTimeModel> test = MongoDashboardRepository.getInstance()
+					.getOperationResponseTime(updatedOperationResponseTimes.get(0).getTimestampLandscape(), 10000);
+
+			for (OperationResponseTimeModel m : test) {
+
+				System.out.println(m.toString());
+			}
+		}
+
 		operationResponseTimes = sortByResponseTime(updatedOperationResponseTimes);
+	}
+	
+	public List<OperationResponseTimeInfoModel> getOperationResponseTimeInfo(int limit){
+		return MongoDashboardRepository.getInstance().getOperationResponseTimeInfos(limit);
+	}
+
+	public List<OperationResponseTimeModel> getOperationResponseTimes(long timestampLandscape, int limit) {
+		List<OperationResponseTimeModel> result = MongoDashboardRepository.getInstance().getOperationResponseTime(timestampLandscape, limit);
+		if(result != null) {
+			return sortByResponseTime(result);
+		}
+		return null;
+	
 	}
 
 	public List<OperationResponseTimeModel> getOperationResponseTimes(int limit) {

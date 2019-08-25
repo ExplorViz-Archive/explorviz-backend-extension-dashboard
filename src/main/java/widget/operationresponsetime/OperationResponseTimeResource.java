@@ -21,4 +21,25 @@ public class OperationResponseTimeResource {
 
 	}
 
+	@GET
+	@Path("info")
+	@Produces(MEDIA_TYPE)
+	public List<OperationResponseTimeInfoModel> getInfoList(@DefaultValue("50") @QueryParam("limit") int limit) {
+		List<OperationResponseTimeInfoModel> result = OperationResponseTimeService.getInstance().getOperationResponseTimeInfo(limit);
+		for(OperationResponseTimeInfoModel m : result) {
+			System.out.println(m.toString());
+		}
+		return result;
+
+	}
+
+	@GET
+	@Path("search")
+	@Produces(MEDIA_TYPE)
+	public List<OperationResponseTimeModel> getSearchedList(@DefaultValue("50") @QueryParam("limit") int limit,
+			@DefaultValue("0") @QueryParam("timestampLandscape") long timestampLandscape) {
+		return OperationResponseTimeService.getInstance().getOperationResponseTimes(timestampLandscape, limit);
+
+	}
+
 }

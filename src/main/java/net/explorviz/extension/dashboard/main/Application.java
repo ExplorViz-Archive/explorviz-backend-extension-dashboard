@@ -16,6 +16,8 @@ import widget.eventlog.EventLogModel;
 import widget.eventlog.EventLogResource;
 import widget.eventlog.EventLogSettingsModel;
 import widget.eventlog.EventLogSettingsResource;
+import widget.operationresponsetime.OperationResponseTimeInfoModel;
+import widget.operationresponsetime.OperationResponseTimeInfoResource;
 import widget.operationresponsetime.OperationResponseTimeModel;
 import widget.operationresponsetime.OperationResponseTimeResource;
 import widget.eventlog.EventLogInfoModel;
@@ -56,6 +58,7 @@ public class Application extends ResourceConfig {
 		GenericTypeFinder.getTypeMap().put("EventLogInfoModel", EventLogInfoModel.class);
 		GenericTypeFinder.getTypeMap().put("EventLogSettingsModel", EventLogSettingsModel.class);
 		GenericTypeFinder.getTypeMap().put("OperationResponseTimeModel", OperationResponseTimeModel.class);
+		GenericTypeFinder.getTypeMap().put("OperationResponseTimeInfoModel", OperationResponseTimeInfoModel.class);
 
 		// register Landscape Model classes, since we want to use them
 		TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
@@ -87,6 +90,7 @@ public class Application extends ResourceConfig {
 		register(EventLogInfoResource.class);
 		register(EventLogSettingsResource.class);
 		register(OperationResponseTimeResource.class);
+		register(OperationResponseTimeInfoResource.class);
 
 		// Starting point for your DI-based extension
 		this.register(SetupApplicationListener.class);
