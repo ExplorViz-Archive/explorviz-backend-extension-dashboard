@@ -1,7 +1,8 @@
 package widget.programminglanguage;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-import net.explorviz.extension.dashboard.model.BaseModel;
+
+import net.explorviz.extension.dashboard.main.BaseModel;
 import net.explorviz.shared.landscape.model.helper.EProgrammingLanguage;
 
 @Type("programminglanguage")

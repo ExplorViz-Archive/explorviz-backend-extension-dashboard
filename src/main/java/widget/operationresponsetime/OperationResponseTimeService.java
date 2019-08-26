@@ -31,18 +31,21 @@ public class OperationResponseTimeService {
 			}
 
 			MongoDashboardRepository.getInstance().saveOperationResponseTimeInfo(new OperationResponseTimeInfoModel(updatedOperationResponseTimes.get(0).getTimestampLandscape(),updatedOperationResponseTimes.size()));
-			
+			/*
 			for(OperationResponseTimeInfoModel m : MongoDashboardRepository.getInstance().getOperationResponseTimeInfos(10)) {
 				System.out.println(m.toString());
 			}
 			
+			
 			List<OperationResponseTimeModel> test = MongoDashboardRepository.getInstance()
 					.getOperationResponseTime(updatedOperationResponseTimes.get(0).getTimestampLandscape(), 10000);
-
+					
+			
 			for (OperationResponseTimeModel m : test) {
 
 				System.out.println(m.toString());
 			}
+			*/
 		}
 
 		operationResponseTimes = sortByResponseTime(updatedOperationResponseTimes);

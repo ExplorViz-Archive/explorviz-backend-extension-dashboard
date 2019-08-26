@@ -18,13 +18,13 @@ public class OperationResponseTimeInfoResource {
 
 	@GET
 	@Produces(MEDIA_TYPE)
-	public OperationResponseTimeInfoModel getModel(@DefaultValue("50") @QueryParam("limit") int limit) {
+	public List<OperationResponseTimeInfoModel> getModel(@DefaultValue("50") @QueryParam("limit") int limit) {
 		List<OperationResponseTimeInfoModel> result = OperationResponseTimeService.getInstance().getOperationResponseTimeInfo(limit);
-		System.out.println(result.size());
+
 		for(OperationResponseTimeInfoModel m : result) {
 			System.out.println(m.toString());
 		}
-		return result.get(0);
+		return result;
 
 	}
 

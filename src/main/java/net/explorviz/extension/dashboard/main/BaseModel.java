@@ -1,4 +1,4 @@
-package net.explorviz.extension.dashboard.model;
+package net.explorviz.extension.dashboard.main;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;

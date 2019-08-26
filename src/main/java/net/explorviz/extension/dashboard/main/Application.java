@@ -1,8 +1,5 @@
 package net.explorviz.extension.dashboard.main;
 
-import net.explorviz.extension.dashboard.model.ClazzCommunicationListModel;
-import net.explorviz.extension.dashboard.model.ClazzCommunicationModel;
-import net.explorviz.extension.dashboard.resources.ClazzCommunicationWidgetResource;
 import net.explorviz.shared.common.provider.GenericTypeFinder;
 import net.explorviz.shared.common.provider.JsonApiListProvider;
 import net.explorviz.shared.common.provider.JsonApiProvider;
@@ -12,6 +9,10 @@ import net.explorviz.shared.security.filters.AuthorizationFilter;
 import net.explorviz.shared.security.filters.CorsResponseFilter;
 import widget.activeclassinstances.ActiveClassInstancesModel;
 import widget.activeclassinstances.ActiveClassInstancesResource;
+import widget.aggregatedresponsetime.AggregatedResponseTimeInfoModel;
+import widget.aggregatedresponsetime.AggregatedResponseTimeInfoResource;
+import widget.aggregatedresponsetime.AggregatedResponseTimeModel;
+import widget.aggregatedresponsetime.AggregatedResponseTimeResource;
 import widget.eventlog.EventLogModel;
 import widget.eventlog.EventLogResource;
 import widget.eventlog.EventLogSettingsModel;
@@ -44,8 +45,6 @@ public class Application extends ResourceConfig {
 	public Application() {
 
 		GenericTypeFinder.getTypeMap().put("TotalOverviewModel", TotalOverviewModel.class);
-		GenericTypeFinder.getTypeMap().put("ClazzCommunicationModel", ClazzCommunicationModel.class);
-		GenericTypeFinder.getTypeMap().put("ClazzCommunicationListModel", ClazzCommunicationListModel.class);
 		GenericTypeFinder.getTypeMap().put("ActiveClassInstancesModel", ActiveClassInstancesModel.class);
 		GenericTypeFinder.getTypeMap().put("TotalRequestsModel", TotalRequestsModel.class);
 		GenericTypeFinder.getTypeMap().put("ProgrammingLanguagesModel", ProgrammingLanguagesModel.class);
@@ -59,7 +58,11 @@ public class Application extends ResourceConfig {
 		GenericTypeFinder.getTypeMap().put("EventLogSettingsModel", EventLogSettingsModel.class);
 		GenericTypeFinder.getTypeMap().put("OperationResponseTimeModel", OperationResponseTimeModel.class);
 		GenericTypeFinder.getTypeMap().put("OperationResponseTimeInfoModel", OperationResponseTimeInfoModel.class);
+		GenericTypeFinder.getTypeMap().put("AggregatedResponseTimeModel", AggregatedResponseTimeModel.class);
+		GenericTypeFinder.getTypeMap().put("AggregatedResponseTimeInfoModel", AggregatedResponseTimeInfoModel.class);
 
+		
+		
 		// register Landscape Model classes, since we want to use them
 		TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
 			GenericTypeFinder.getTypeMap().put(classname, classRef);
@@ -79,7 +82,6 @@ public class Application extends ResourceConfig {
 
 		// register the Resources
 		register(TotalOverviewResource.class);
-		register(ClazzCommunicationWidgetResource.class);
 		register(ActiveClassInstancesResource.class);
 		register(TotalRequestsResource.class);
 		register(ProgrammingLanguagesResource.class);
@@ -91,7 +93,9 @@ public class Application extends ResourceConfig {
 		register(EventLogSettingsResource.class);
 		register(OperationResponseTimeResource.class);
 		register(OperationResponseTimeInfoResource.class);
-
+		register(AggregatedResponseTimeResource.class);
+		register(AggregatedResponseTimeInfoResource.class);
+		
 		// Starting point for your DI-based extension
 		this.register(SetupApplicationListener.class);
 	}

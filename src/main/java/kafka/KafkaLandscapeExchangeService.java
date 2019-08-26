@@ -1,4 +1,4 @@
-package net.explorviz.extension.dashboard.services;
+package kafka;
 
 import com.github.jasminb.jsonapi.exceptions.DocumentSerializationException;
 import java.time.Duration;
@@ -59,9 +59,7 @@ public class KafkaLandscapeExchangeService implements Runnable {
   }
   
 
-  
-  @Inject
-  private ClazzCommunicationWidgetService clazzCommunicationWidgetService;
+
 
   @Override
   public void run() {
@@ -92,8 +90,7 @@ public class KafkaLandscapeExchangeService implements Runnable {
         // you may persist the landscape here
         
              
-        clazzCommunicationWidgetService.update(l);
-        
+       
         DataShipper.getInstance().update(l);
         
         

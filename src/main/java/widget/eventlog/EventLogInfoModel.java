@@ -1,7 +1,8 @@
 package widget.eventlog;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-import net.explorviz.extension.dashboard.model.BaseModel;
+
+import net.explorviz.extension.dashboard.main.BaseModel;
 
 @Type("eventloginfo")
 public class EventLogInfoModel extends BaseModel {

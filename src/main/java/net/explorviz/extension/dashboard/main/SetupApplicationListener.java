@@ -2,7 +2,7 @@ package net.explorviz.extension.dashboard.main;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebListener;
-import net.explorviz.extension.dashboard.services.KafkaLandscapeExchangeService;
+
 import net.explorviz.shared.common.idgen.IdGenerator;
 import widget.totalrequests.TotalRequestsModel;
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
@@ -12,6 +12,8 @@ import org.glassfish.jersey.server.monitoring.RequestEvent;
 import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import kafka.KafkaLandscapeExchangeService;
 
 /**
  * Primary starting class - executed, when the servlet context is started.
@@ -23,8 +25,6 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 	@Inject
 	private KafkaLandscapeExchangeService landscapeExchangeService;
-
-
 
 	@Inject
 	private IdGenerator idGenerator;
@@ -58,9 +58,7 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 		// erstmal so !?
 
-	
 		TotalRequestsModel.initialize(this.idGenerator);
-
 
 	}
 

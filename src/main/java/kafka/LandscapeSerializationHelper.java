@@ -1,4 +1,4 @@
-package net.explorviz.extension.dashboard.services;
+package kafka;
 
 import com.github.jasminb.jsonapi.JSONAPIDocument;
 import com.github.jasminb.jsonapi.ResourceConverter;

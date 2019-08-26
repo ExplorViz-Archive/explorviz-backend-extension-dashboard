@@ -18,6 +18,8 @@ import com.mongodb.operation.OrderBy;
 
 import instantiatedwidgets.InstantiatedWidgetModel;
 import net.explorviz.shared.landscape.model.event.EEventType;
+import widget.aggregatedresponsetime.AggregatedResponseTimeInfoModel;
+import widget.aggregatedresponsetime.AggregatedResponseTimeModel;
 import widget.eventlog.EventLogInfoModel;
 import widget.eventlog.EventLogModel;
 import widget.eventlog.EventLogSettingsModel;
@@ -677,7 +679,7 @@ public class MongoDashboardRepository {
 
 	}
 
-	public List<OperationResponseTimeModel> getOperationResponseTime(final Long timestampLandscape, int entries) {
+	public List<OperationResponseTimeModel> getOperationResponseTime(final long timestampLandscape, int entries) {
 		synchronized (operationResponseTimelock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
@@ -779,7 +781,8 @@ public class MongoDashboardRepository {
 						long timestampLandscape = Long.parseLong(temp.get("timestampLandscape").toString());
 						int amount = Integer.parseInt(temp.get("amount").toString());
 
-						OperationResponseTimeInfoModel t = new OperationResponseTimeInfoModel(timestampLandscape, amount);
+						OperationResponseTimeInfoModel t = new OperationResponseTimeInfoModel(timestampLandscape,
+								amount);
 						list.add(t);
 
 					} else {
@@ -787,6 +790,144 @@ public class MongoDashboardRepository {
 						return list;
 					}
 
+				}
+
+				return list;
+
+			}
+		}
+	}
+
+	private Object aggregatedresponsetimeLock = new Object();
+
+	public void saveAggregatedResponseTime(AggregatedResponseTimeModel model) {
+		synchronized (aggregatedresponsetimeLock) {
+			final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
+
+			final Document dashboardDocument = new Document();
+
+			dashboardDocument.append("type", "aggregatedresponsetime");
+			dashboardDocument.append("timestampLandscape", model.getTimestampLandscape());
+			dashboardDocument.append("totalRequests", model.getTotalRequests());
+			dashboardDocument.append("averageResponseTime", model.getAverageResponseTime());
+			dashboardDocument.append("sourceClazzFullName", model.getSourceClazzFullName());
+			dashboardDocument.append("targetClazzFullName", model.getTargetClazzFullName());
+
+			try {
+				dashboardCollection.insertOne(dashboardDocument);
+			} catch (final MongoException e) {
+				throw e;
+			}
+		}
+
+	}
+
+	public List<AggregatedResponseTimeModel> getAggregatedResponseTimes(final long timestampLandscape) {
+		synchronized (aggregatedresponsetimeLock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			document.append("type", "aggregatedresponsetime");
+			document.append("timestampLandscape", timestampLandscape);
+
+			final FindIterable<Document> result;
+			List<AggregatedResponseTimeModel> list = new ArrayList<AggregatedResponseTimeModel>();
+
+			try {
+				result = collection.find(document).sort(new BasicDBObject("_id", -1));
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+			if (result.first() == null) {
+				return list;
+			} else {
+
+				for (Iterator<Document> i = result.iterator(); i.hasNext();) {
+
+					Document temp = (Document) i.next();
+
+					if (result.first().get("totalRequests") != null && result.first().get("averageResponseTime") != null
+							&& result.first().get("sourceClazzFullName") != null
+							&& result.first().get("targetClazzFullName") != null) {
+
+						int totalRequests = Integer.parseInt(temp.get("totalRequests").toString());
+						float averageResponseTime = Float.parseFloat(temp.get("averageResponseTime").toString());
+						String sourceClazzFullName = "" + temp.get("sourceClazzFullName").toString();
+						String targetClazzFullName = "" + temp.get("targetClazzFullName").toString();
+
+						list.add(new AggregatedResponseTimeModel(timestampLandscape, totalRequests, averageResponseTime,
+								sourceClazzFullName, targetClazzFullName));
+
+					} else {
+
+						return list;
+					}
+
+				}
+
+				return list;
+
+			}
+		}
+	}
+
+	public void saveAggregatedResponseTimeInfo(AggregatedResponseTimeInfoModel model) {
+		synchronized (aggregatedresponsetimeLock) {
+			final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
+
+			final Document dashboardDocument = new Document();
+
+			dashboardDocument.append("type", "aggregatedresponsetimeinfo");
+			dashboardDocument.append("timestampLandscape", model.getTimestampLandscape());
+			dashboardDocument.append("entrys", model.getEntrys());
+
+			try {
+				dashboardCollection.insertOne(dashboardDocument);
+			} catch (final MongoException e) {
+				throw e;
+			}
+		}
+
+	}
+
+	public List<AggregatedResponseTimeInfoModel> getAggregatedResponseTimeInfos(int limit) {
+		synchronized (aggregatedresponsetimeLock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			document.append("type", "aggregatedresponsetimeinfo");
+
+			final FindIterable<Document> result;
+			List<AggregatedResponseTimeInfoModel> list = new ArrayList<AggregatedResponseTimeInfoModel>();
+			
+
+			try {
+				result = collection.find(document).sort(new BasicDBObject("_id", -1)).limit(limit);;
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+			if (result.first() == null) {
+				return list;
+			} else {
+
+				for (Iterator<Document> i = result.iterator(); i.hasNext();) {
+
+					Document temp = (Document) i.next();
+
+					if (result.first().get("timestampLandscape") != null && result.first().get("entrys") != null) {
+
+						long timestampLandscape = Long.parseLong(temp.get("timestampLandscape").toString());
+						int entrys = Integer.parseInt(temp.get("entrys").toString());
+
+						list.add(new AggregatedResponseTimeInfoModel(timestampLandscape, entrys));
+
+					} else {
+						return list;
+					}
 				}
 
 				return list;

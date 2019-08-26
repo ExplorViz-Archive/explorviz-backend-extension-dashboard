@@ -1,7 +1,8 @@
 package widget.totalrequests;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-import net.explorviz.extension.dashboard.model.BaseModel;
+
+import net.explorviz.extension.dashboard.main.BaseModel;
 
 @Type("totalrequests")
 public class TotalRequestsModel extends BaseModel {

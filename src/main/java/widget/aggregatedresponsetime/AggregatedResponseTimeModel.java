@@ -1,27 +1,27 @@
-package widget.operationresponsetime;
+package widget.aggregatedresponsetime;
 
 import com.github.jasminb.jsonapi.annotations.Type;
 
 import net.explorviz.extension.dashboard.main.BaseModel;
 
-@Type("operationresponsetime")
-public class OperationResponseTimeModel extends BaseModel {
+@Type("aggregatedresponsetime")
+public class AggregatedResponseTimeModel extends BaseModel {
 
 	private long timestampLandscape;
-	private String operationName;
+	private int totalRequests;
 	private float averageResponseTime;
 	private String sourceClazzFullName;
 	private String targetClazzFullName;
 
-	public OperationResponseTimeModel() {
+	public AggregatedResponseTimeModel() {
 		// default constructor for JSON API parsing
 	}
 
-	public OperationResponseTimeModel(long timestampLandscape, String operationName, float averageResponseTime,
+	public AggregatedResponseTimeModel(long timestampLandscape, int totalRequests, float averageResponseTime,
 			String sourceClazzFullName, String targetClazzFullName) {
 		super();
 		this.timestampLandscape = timestampLandscape;
-		this.operationName = operationName;
+		this.totalRequests = totalRequests;
 		this.averageResponseTime = averageResponseTime;
 		this.sourceClazzFullName = sourceClazzFullName;
 		this.targetClazzFullName = targetClazzFullName;
@@ -35,12 +35,12 @@ public class OperationResponseTimeModel extends BaseModel {
 		this.timestampLandscape = timestampLandscape;
 	}
 
-	public String getOperationName() {
-		return operationName;
+	public int getTotalRequests() {
+		return totalRequests;
 	}
 
-	public void setOperationName(String operationName) {
-		this.operationName = operationName;
+	public void setTotalRequests(int totalRequests) {
+		this.totalRequests = totalRequests;
 	}
 
 	public float getAverageResponseTime() {
@@ -68,7 +68,9 @@ public class OperationResponseTimeModel extends BaseModel {
 	}
 
 	public String toString() {
-		return "OperationResponseTimeModel - timestampLandscape: " + timestampLandscape + " operationName: "
-				+ operationName + " averageResponseTime: " + averageResponseTime;
+		return "timestampLandscape: " + timestampLandscape + "   totalRequests: " + totalRequests
+				+ "   averageResponseTime" + averageResponseTime + "   sourceClazzFullName: " + sourceClazzFullName
+				+ "   targetClazzFullName: " + targetClazzFullName;
 	}
+
 }

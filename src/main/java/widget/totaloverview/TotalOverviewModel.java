@@ -2,7 +2,7 @@ package widget.totaloverview;
 
 import com.github.jasminb.jsonapi.annotations.Type;
 
-import net.explorviz.extension.dashboard.model.BaseModel;
+import net.explorviz.extension.dashboard.main.BaseModel;
 
 @Type("totaloverviewwidget")
 public class TotalOverviewModel extends BaseModel {

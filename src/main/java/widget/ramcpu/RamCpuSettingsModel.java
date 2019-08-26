@@ -1,7 +1,8 @@
 package widget.ramcpu;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-import net.explorviz.extension.dashboard.model.BaseModel;
+
+import net.explorviz.extension.dashboard.main.BaseModel;
 
 @Type("ramcpusetting")
 public class RamCpuSettingsModel extends BaseModel {

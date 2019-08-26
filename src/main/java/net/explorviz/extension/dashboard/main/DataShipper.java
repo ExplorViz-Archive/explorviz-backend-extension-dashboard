@@ -2,6 +2,7 @@ package net.explorviz.extension.dashboard.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.explorviz.shared.landscape.model.application.AggregatedClazzCommunication;
 import net.explorviz.shared.landscape.model.application.Clazz;
 import net.explorviz.shared.landscape.model.application.ClazzCommunication;
 import net.explorviz.shared.landscape.model.application.Component;
@@ -11,6 +12,8 @@ import net.explorviz.shared.landscape.model.landscape.NodeGroup;
 import net.explorviz.shared.landscape.model.landscape.System;
 import widget.activeclassinstances.ActiveClassInstancesModel;
 import widget.activeclassinstances.ActiveClassInstancesService;
+import widget.aggregatedresponsetime.AggregatedResponseTimeModel;
+import widget.aggregatedresponsetime.AggregatedResponseTimeService;
 import widget.eventlog.EventLogService;
 import widget.operationresponsetime.OperationResponseTimeModel;
 import widget.operationresponsetime.OperationResponseTimeService;
@@ -41,6 +44,7 @@ public class DataShipper {
 
 	private List<ProgrammingLanguagesModel> programmingLanguageList = new ArrayList<ProgrammingLanguagesModel>();
 	private List<RamCpuModel> ramCpuModelList = new ArrayList<RamCpuModel>();
+	private List<AggregatedResponseTimeModel> aggregatedResponseTimes = new ArrayList<AggregatedResponseTimeModel>();
 
 	public void update(Landscape l) {
 		long startTime = java.lang.System.currentTimeMillis();
@@ -53,6 +57,7 @@ public class DataShipper {
 		operationResponseTimes = new ArrayList<OperationResponseTimeModel>();
 		programmingLanguageList = new ArrayList<ProgrammingLanguagesModel>();
 		ramCpuModelList = new ArrayList<RamCpuModel>();
+		aggregatedResponseTimes = new ArrayList<AggregatedResponseTimeModel>();
 
 		TotalOverviewModel totalOverviewModel = new TotalOverviewModel(0, 0, 0, 0);
 		totalOverviewModel.setTimestamp(l.getTimestamp().getTimestamp());
@@ -94,6 +99,9 @@ public class DataShipper {
 					// Applications
 					for (int n = 0; n < applications.size(); n++) {
 
+						// iterate throw the aggregatedclazzcommunication for some widgets
+						checkAggregatedClazzCommunications(applications.get(n).getAggregatedClazzCommunications(), l);
+
 						List<Component> components = applications.get(n).getComponents();
 						// java.lang.System.out.println("Components: " + components.size());
 						ProgrammingLanguagesModel programmingLanguagesModel = new ProgrammingLanguagesModel(
@@ -115,10 +123,34 @@ public class DataShipper {
 		ProgrammingLanguagesService.getInstance().update(programmingLanguageList);
 		RamCpuService.getInstance().update(ramCpuModelList);
 		TotalOverviewService.getInstance().update(totalOverviewModel);
+		AggregatedResponseTimeService.getInstance().update(aggregatedResponseTimes);
 
 		long stopTime = java.lang.System.currentTimeMillis();
 		long elapsedTime = stopTime - startTime;
 		java.lang.System.out.println("Datashipper - Measured execution time: " + elapsedTime + "ms");
+	}
+
+	private void checkAggregatedClazzCommunications(List<AggregatedClazzCommunication> list, Landscape l) {
+		List<AggregatedResponseTimeModel> aggregatedResponseTimes = new ArrayList<AggregatedResponseTimeModel>();
+
+		for (int i = 0; i < list.size(); i++) {
+
+			long timestampLandscape = l.getTimestamp().getTimestamp();
+			int totalRequests = list.get(i).getTotalRequests();
+			float averageResponseTime = list.get(i).getAverageResponseTime();
+			String sourceClazzFullName = list.get(i).getSourceClazz().getFullQualifiedName();
+			String targetClazzFullName = list.get(i).getTargetClazz().getFullQualifiedName();
+
+			//quickfix. kieker give us sometimes invalid respone times like -1 !?
+			if (averageResponseTime != -1) {
+				AggregatedResponseTimeModel temp = new AggregatedResponseTimeModel(timestampLandscape, totalRequests,
+						averageResponseTime, sourceClazzFullName, targetClazzFullName);
+				aggregatedResponseTimes.add(temp);
+			}
+		}
+
+		this.aggregatedResponseTimes.addAll(aggregatedResponseTimes);
+
 	}
 
 	private void checkComponents(List<Component> c, Landscape l) {
@@ -149,12 +181,12 @@ public class DataShipper {
 									clazzCommunication.getAverageResponseTime(),
 									clazzCommunication.getSourceClazz().getFullQualifiedName(),
 									clazzCommunication.getTargetClazz().getFullQualifiedName());
-							
-							//hotfix - kieker is generating sometimes a response time of -1 !?
-							if(temp.getAverageResponseTime() != -1) {
-							operationResponseTimes.add(temp);
-							java.lang.System.out.println(temp.toString());
-							
+
+							// hotfix - kieker is generating sometimes a response time of -1 !?
+							if (temp.getAverageResponseTime() != -1) {
+								operationResponseTimes.add(temp);
+								java.lang.System.out.println(temp.toString());
+
 							}
 							/*
 							 * java.lang.System.out.println(clazzCommunication.getSourceClazz().
