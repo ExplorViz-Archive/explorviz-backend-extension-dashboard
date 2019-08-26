@@ -1,5 +1,8 @@
 package widget.operationresponsetime;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import com.github.jasminb.jsonapi.annotations.Type;
 
 import net.explorviz.extension.dashboard.main.BaseModel;
@@ -68,7 +71,31 @@ public class OperationResponseTimeModel extends BaseModel {
 	}
 
 	public String toString() {
-		return "OperationResponseTimeModel - timestampLandscape: " + timestampLandscape + " operationName: "
-				+ operationName + " averageResponseTime: " + averageResponseTime;
+		return "operationresponsetime - timestampLandscape: " + timestampLandscape + " operationName: " + operationName
+				+ " averageResponseTime: " + averageResponseTime + " sourceClazzFullName: " + sourceClazzFullName
+				+ " targetClazzFullName: " + targetClazzFullName;
+	}
+
+	public static OperationResponseTimeModel convert(Map<String, Object> map) {
+		long timestampLandscape = (long) map.get("timestampLandscape");
+		String operationName = (String) map.get("operationName");
+		float averageResponseTime = Float.parseFloat(map.get("averageResponseTime").toString());
+		String sourceClazzFullName = (String) map.get("sourceClazzFullName");
+		String targetClazzFullName = (String) map.get("targetClazzFullName");
+
+		return new OperationResponseTimeModel(timestampLandscape, operationName, averageResponseTime,
+				sourceClazzFullName, targetClazzFullName);
+	}
+
+	public Map<String, Object> convert() {
+		Map<String, Object> result = new Hashtable<>();
+		result.put("type", "operationresponsetime");
+		result.put("timestampLandscape", this.timestampLandscape);
+		result.put("operationName", this.operationName);
+		result.put("averageResponseTime", this.averageResponseTime);
+		result.put("sourceClazzFullName", this.sourceClazzFullName);
+		result.put("targetClazzFullName", this.targetClazzFullName);
+
+		return result;
 	}
 }

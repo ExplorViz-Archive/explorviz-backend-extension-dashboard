@@ -1,5 +1,7 @@
 package widget.operationresponsetime;
 
+import java.util.Hashtable;
+import java.util.Map;
 import com.github.jasminb.jsonapi.annotations.Type;
 
 @Type("operationresponsetimeinfo")
@@ -7,7 +9,7 @@ public class OperationResponseTimeInfoModel {
 
 	private long timestampLandscape;
 	private int amount;
-	
+
 	public OperationResponseTimeInfoModel() {
 		// default constructor for JSON API parsing
 	}
@@ -33,10 +35,25 @@ public class OperationResponseTimeInfoModel {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	
+
 	public String toString() {
-		return "timestampLandscape: " + timestampLandscape + "   amount: " + amount;
+		return "operationresponsetimeinfo - timestampLandscape: " + timestampLandscape + " amount: " + amount;
 	}
-	
-	
+
+	public static OperationResponseTimeInfoModel convert(Map<String, Object> map) {
+		long timestampLandscape = (long) map.get("timestampLandscape");
+		int amount = (int) map.get("amount");
+
+		return new OperationResponseTimeInfoModel(timestampLandscape, amount);
+	}
+
+	public Map<String, Object> convert() {
+		Map<String, Object> result = new Hashtable<>();
+		result.put("type", "operationresponsetimeinfo");
+		result.put("timestampLandscape", this.timestampLandscape);
+		result.put("amount", this.amount);
+
+		return result;
+	}
+
 }

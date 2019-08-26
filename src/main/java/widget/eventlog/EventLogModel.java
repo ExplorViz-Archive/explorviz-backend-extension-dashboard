@@ -1,5 +1,8 @@
 package widget.eventlog;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import com.github.jasminb.jsonapi.annotations.Type;
 
 import net.explorviz.extension.dashboard.main.BaseModel;
@@ -58,8 +61,28 @@ public class EventLogModel extends BaseModel {
 	}
 
 	public String toString() {
-		return "EventLogModel - timestampEvent: " + timestampEvent + " eventType: " + eventType.toString()
+		return "eventlog - timestampEvent: " + timestampEvent + " eventType: " + eventType.toString()
 				+ " eventMessage: " + eventMessage;
+	}
+
+	public static EventLogModel convert(Map<String, Object> map) {
+		long timestampLandscape = (long) map.get("timestampLandscape");
+		long timestampEvent = (long) map.get("timestampEvent");
+		EEventType eventType = (EEventType) map.get("eventType");
+		String eventMessage = (String) map.get("eventMessage");
+
+		return new EventLogModel(timestampLandscape, timestampEvent, eventType, eventMessage);
+	}
+
+	public Map<String, Object> convert() {
+		Map<String, Object> result = new Hashtable<>();
+		result.put("type", "eventlog");
+		result.put("timestampLandscape", this.timestampLandscape);
+		result.put("timestampEvent", this.timestampEvent);
+		result.put("eventType", this.eventType);
+		result.put("eventMessage", this.eventMessage);
+
+		return result;
 	}
 
 }

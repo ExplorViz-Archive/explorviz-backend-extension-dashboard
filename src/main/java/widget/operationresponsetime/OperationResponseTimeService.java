@@ -1,9 +1,11 @@
 package widget.operationresponsetime;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
-
+import java.util.Map;
 import persistence.MongoDashboardRepository;
+
 
 public class OperationResponseTimeService {
 
@@ -27,40 +29,44 @@ public class OperationResponseTimeService {
 
 			for (OperationResponseTimeModel m : updatedOperationResponseTimes) {
 
-				MongoDashboardRepository.getInstance().saveOperationResponseTime(m);
-			}
-
-			MongoDashboardRepository.getInstance().saveOperationResponseTimeInfo(new OperationResponseTimeInfoModel(updatedOperationResponseTimes.get(0).getTimestampLandscape(),updatedOperationResponseTimes.size()));
-			/*
-			for(OperationResponseTimeInfoModel m : MongoDashboardRepository.getInstance().getOperationResponseTimeInfos(10)) {
-				System.out.println(m.toString());
+				MongoDashboardRepository.getInstance().save(m.convert(), this);
 			}
 			
-			
-			List<OperationResponseTimeModel> test = MongoDashboardRepository.getInstance()
-					.getOperationResponseTime(updatedOperationResponseTimes.get(0).getTimestampLandscape(), 10000);
-					
-			
-			for (OperationResponseTimeModel m : test) {
-
-				System.out.println(m.toString());
-			}
-			*/
+			Map<String, Object> table = new Hashtable<>();
+			table.put("type", "operationresponsetimeinfo");
+			table.put("timestampLandscape", updatedOperationResponseTimes.get(0).getTimestampLandscape());
+			table.put("amount", updatedOperationResponseTimes.size());
+			MongoDashboardRepository.getInstance().save(table, this);
 		}
 
 		operationResponseTimes = sortByResponseTime(updatedOperationResponseTimes);
 	}
 	
 	public List<OperationResponseTimeInfoModel> getOperationResponseTimeInfo(int limit){
-		return MongoDashboardRepository.getInstance().getOperationResponseTimeInfos(limit);
+		Map<String, Object> query = new Hashtable<>();
+		query.put("type", "operationresponsetimeinfo");
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, limit, this);
+		
+		List<OperationResponseTimeInfoModel> result = new ArrayList<OperationResponseTimeInfoModel>();
+		queryResult.forEach(map -> {
+			result.add(OperationResponseTimeInfoModel.convert(map));
+
+		});
+		return result;
 	}
 
-	public List<OperationResponseTimeModel> getOperationResponseTimes(long timestampLandscape, int limit) {
-		List<OperationResponseTimeModel> result = MongoDashboardRepository.getInstance().getOperationResponseTime(timestampLandscape, limit);
-		if(result != null) {
-			return sortByResponseTime(result);
-		}
-		return null;
+	public List<OperationResponseTimeModel> getOperationResponseTimes(long timestampLandscape, int limit) {		
+		Map<String, Object> query = new Hashtable<>();
+		query.put("type", "operationresponsetime");
+		query.put("timestampLandscape", timestampLandscape);
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, limit, this);
+		
+		List<OperationResponseTimeModel> result = new ArrayList<OperationResponseTimeModel>();
+		queryResult.forEach(map -> {
+			result.add(OperationResponseTimeModel.convert(map));
+
+		});
+		return sortByResponseTime(result);
 	
 	}
 

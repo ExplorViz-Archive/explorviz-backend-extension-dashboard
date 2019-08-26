@@ -1,8 +1,10 @@
 package widget.eventlog;
 
+import java.util.Hashtable;
+import java.util.Map;
 import com.github.jasminb.jsonapi.annotations.Type;
-
 import net.explorviz.extension.dashboard.main.BaseModel;
+
 
 @Type("eventlogsetting")
 public class EventLogSettingsModel extends BaseModel {
@@ -37,7 +39,23 @@ public class EventLogSettingsModel extends BaseModel {
 	}
 
 	public String toString() {
-		return "EventLogSetting - instanceID: " + this.instanceID + " entries: " + this.entries;
+		return "eventlogsetting - instanceID: " + this.instanceID + " entries: " + this.entries;
+	}
+
+	public static EventLogSettingsModel convert(Map<String, Object> map) {
+		int instanceID = (int) map.get("instanceID");
+		int entries = (int) map.get("entries");
+
+		return new EventLogSettingsModel(instanceID, entries);
+	}
+
+	public Map<String, Object> convert() {
+		Map<String, Object> result = new Hashtable<>();
+		result.put("type", "eventlogsetting");
+		result.put("instanceID", this.instanceID);
+		result.put("entries", this.entries);
+
+		return result;
 	}
 
 }

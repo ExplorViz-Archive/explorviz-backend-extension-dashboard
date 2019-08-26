@@ -1,5 +1,8 @@
 package widget.aggregatedresponsetime;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 import com.github.jasminb.jsonapi.annotations.Type;
 import net.explorviz.extension.dashboard.main.BaseModel;
 
@@ -7,16 +10,16 @@ import net.explorviz.extension.dashboard.main.BaseModel;
 public class AggregatedResponseTimeInfoModel extends BaseModel {
 
 	private long timestampLandscape;
-	private int entrys;
+	private int entries;
 
 	public AggregatedResponseTimeInfoModel() {
 		// default constructor for JSON API parsing
 	}
 
-	public AggregatedResponseTimeInfoModel(long timestampLandscape, int entrys) {
+	public AggregatedResponseTimeInfoModel(long timestampLandscape, int entries) {
 		super();
 		this.timestampLandscape = timestampLandscape;
-		this.entrys = entrys;
+		this.entries = entries;
 	}
 
 	public long getTimestampLandscape() {
@@ -27,16 +30,32 @@ public class AggregatedResponseTimeInfoModel extends BaseModel {
 		this.timestampLandscape = timestampLandscape;
 	}
 
-	public int getEntrys() {
-		return entrys;
+	public int getEntries() {
+		return entries;
 	}
 
-	public void setEntrys(int entrys) {
-		this.entrys = entrys;
+	public void setEntries(int entries) {
+		this.entries = entries;
 	}
-	
+
 	public String toString() {
-		return "timestampLandscape: " + timestampLandscape + "   entrys: " + entrys;
+		return "aggregatedresponsetimeinfo - timestampLandscape: " + timestampLandscape + " entries: " + entries;
+	}
+
+	public static AggregatedResponseTimeInfoModel convert(Map<String, Object> map) {
+		long timestampLandscape = (long) map.get("timestampLandscape");
+		int entries = (int) map.get("entries");
+
+		return new AggregatedResponseTimeInfoModel(timestampLandscape, entries);
+	}
+
+	public Map<String, Object> convert() {
+		Map<String, Object> result = new Hashtable<>();
+		result.put("type", "aggregatedresponsetimeinfo");
+		result.put("timestampLandscape", this.timestampLandscape);
+		result.put("entries", this.entries);
+
+		return result;
 	}
 
 }

@@ -1,7 +1,9 @@
 package widget.aggregatedresponsetime;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import persistence.MongoDashboardRepository;
 
@@ -20,25 +22,51 @@ public class AggregatedResponseTimeService {
 	}
 
 	public void update(List<AggregatedResponseTimeModel> updatedAggregatedResponseTimes) {
-		
-		if(!updatedAggregatedResponseTimes.isEmpty()) {
-			AggregatedResponseTimeInfoModel info = new AggregatedResponseTimeInfoModel(updatedAggregatedResponseTimes.get(0).getTimestampLandscape(), updatedAggregatedResponseTimes.size());
-			MongoDashboardRepository.getInstance().saveAggregatedResponseTimeInfo(info);
-		
-		for (AggregatedResponseTimeModel m : updatedAggregatedResponseTimes) {
-			MongoDashboardRepository.getInstance().saveAggregatedResponseTime(m);
-			System.out.println(m.toString());
-		}
+
+		if (!updatedAggregatedResponseTimes.isEmpty()) {
+			Map<String, Object> table = new Hashtable<>();
+			table.put("type", "aggregatedresponsetimeinfo");
+			table.put("timestampLandscape", updatedAggregatedResponseTimes.get(0).getTimestampLandscape());
+			table.put("entries", updatedAggregatedResponseTimes.size());
+			MongoDashboardRepository.getInstance().save(table, this);
+
+			for (AggregatedResponseTimeModel m : updatedAggregatedResponseTimes) {
+				MongoDashboardRepository.getInstance().save(m.convert(), this);
+			}
 		}
 	}
 
 	public List<AggregatedResponseTimeModel> getAggregatedResponseTimes(long timestampLandscape) {
-		return MongoDashboardRepository.getInstance().getAggregatedResponseTimes(timestampLandscape);
+
+		Map<String, Object> query = new Hashtable<>();
+		query.put("type", "aggregatedresponsetime");
+		query.put("timestampLandscape", timestampLandscape);
+
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, this);
+		List<AggregatedResponseTimeModel> result = new ArrayList<AggregatedResponseTimeModel>();
+
+		queryResult.forEach(map -> {
+			result.add(AggregatedResponseTimeModel.convert(map));
+
+		});
+
+		return sortByResponseTime(result);
 
 	}
-	
-	public List<AggregatedResponseTimeInfoModel> getAggregatedResponseTimeInfos(int limit){
-		return MongoDashboardRepository.getInstance().getAggregatedResponseTimeInfos(limit);
+
+	public List<AggregatedResponseTimeInfoModel> getAggregatedResponseTimeInfos(int limit) {
+
+		Map<String, Object> query = new Hashtable<>();
+		query.put("type", "aggregatedresponsetimeinfo");
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, limit, this);
+
+		List<AggregatedResponseTimeInfoModel> result = new ArrayList<AggregatedResponseTimeInfoModel>();
+		queryResult.forEach(map -> {
+			result.add(AggregatedResponseTimeInfoModel.convert(map));
+
+		});
+		return result;
+
 	}
 
 	public List<AggregatedResponseTimeModel> sortByResponseTime(List<AggregatedResponseTimeModel> oldList) {
