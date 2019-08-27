@@ -22,7 +22,7 @@ public class OperationResponseTimeInfoResource {
 		List<OperationResponseTimeInfoModel> result = OperationResponseTimeService.getInstance().getOperationResponseTimeInfo(limit);
 
 		for(OperationResponseTimeInfoModel m : result) {
-			System.out.println(m.toString());
+			//System.out.println(m.toString());
 		}
 		return result;
 

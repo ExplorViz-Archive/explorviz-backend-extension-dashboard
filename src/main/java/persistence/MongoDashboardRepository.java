@@ -419,28 +419,6 @@ public class MongoDashboardRepository {
 
 	private Object eventloglock = new Object();
 
-	public void saveEventLogs(List<EventLogModel> eventLogModels) {
-		synchronized (eventloglock) {
-			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
-
-			for (int i = 0; i < eventLogModels.size(); i++) {
-				final Document document = new Document();
-
-				document.append("type", "eventlog");
-				document.append("timestampLandscape", eventLogModels.get(i).getTimestampLandscape());
-				document.append("timestampEvent", eventLogModels.get(i).getTimestampEvent());
-				document.append("eventType", eventLogModels.get(i).getEventType().toString());
-				document.append("eventMessage", eventLogModels.get(i).getEventMessage());
-
-				try {
-					collection.insertOne(document);
-				} catch (final MongoException e) {
-					throw e;
-				}
-			}
-		}
-
-	}
 
 	public List<EventLogModel> getEventLogs(String timestampLandscape) {
 		synchronized (eventloglock) {
@@ -481,90 +459,23 @@ public class MongoDashboardRepository {
 		}
 	}
 
-	public void saveEventLogInfo(EventLogInfoModel wrapper) {
-		synchronized (eventloglock) {
-			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+	
 
-			final Document document = new Document();
-
-			document.append("type", "eventloginfo");
-			document.append("timestampLandscape", wrapper.getTimestampLandscape());
-			document.append("amountEvents", wrapper.getAmountEvents());
-
-			try {
-				collection.insertOne(document);
-			} catch (final MongoException e) {
-				throw e;
-			}
-
-		}
-
-	}
-
-	public List<EventLogInfoModel> getEventInfos(int entries) {
-		synchronized (eventloglock) {
-			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
-
-			final Document document = new Document();
-
-			document.append("type", "eventloginfo");
-
-			final FindIterable<Document> result;
-			List<EventLogInfoModel> list = new ArrayList<EventLogInfoModel>();
-
-			try {
-				result = collection.find(document).sort(new BasicDBObject("_id", -1)).limit(entries);
-			} catch (final MongoException e) {
-				throw e;
-			}
-
-			if (result.first() == null) {
-				return null;
-			} else {
-
-				for (Iterator<Document> i = result.iterator(); i.hasNext();) {
-
-					Document temp = (Document) i.next();
-
-					if (temp.get("timestampLandscape") != null && temp.get("amountEvents") != null) {
-
-						long timestampLandscape = Long.parseLong(temp.get("timestampLandscape").toString());
-						int amountEvents = Integer.parseInt(temp.get("amountEvents").toString());
-
-						list.add(new EventLogInfoModel(timestampLandscape, amountEvents));
-
-					} else {
-
-						return null;
-					}
-
-				}
-
-				return list;
-
-			}
-		}
-	}
+	
 
 	public void printDatabase() {
 		PrintStream ps_console = System.out;
 		try {
-			// Store console print stream.
-			// PrintStream ps_console = System.out;
-
 			File file = new File("file.txt");
 			FileOutputStream fos;
 
 			fos = new FileOutputStream(file);
 
-			// Create new print stream for file.
 			PrintStream ps = new PrintStream(fos);
 
-			// Set file print stream.
 			System.setOut(ps);
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -636,6 +547,7 @@ public class MongoDashboardRepository {
 
 	public List<Map<String, Object>> query(Map<String, Object> query, int limit, Object lock) {
 		synchronized (lock) {
+			System.out.println("query");
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
 			final Document document = new Document();
@@ -656,6 +568,7 @@ public class MongoDashboardRepository {
 
 					temp.forEach((k, v) -> {
 						if (!k.equals("_id")) {
+							System.out.println("query - key: " + k + "value: " + v);
 							map.put(k, v);
 						}
 					});

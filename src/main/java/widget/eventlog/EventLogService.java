@@ -1,9 +1,12 @@
 package widget.eventlog;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import net.explorviz.shared.landscape.model.event.Event;
 import persistence.MongoDashboardRepository;
+
 
 public class EventLogService {
 
@@ -29,8 +32,11 @@ public class EventLogService {
 
 			currentLogs = new ArrayList<>(temp);
 
-			MongoDashboardRepository.getInstance().saveEventLogs(temp);
-			MongoDashboardRepository.getInstance().saveEventLogInfo(wrapper);
+			for (EventLogModel m : temp) {
+				MongoDashboardRepository.getInstance().save(m.convert(), this);
+			}
+			MongoDashboardRepository.getInstance().save(wrapper.convert(), this);
+			
 		}
 
 	}
@@ -51,11 +57,38 @@ public class EventLogService {
 	}
 
 	public List<EventLogModel> getEventLogModels(String timestampLandscape) {
+		/*
+		Map<String, Object> query = new Hashtable<>();
+		query.put("type", "eventlog");
+		query.put("timestampLandscape", timestampLandscape);
+
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, this);
+		List<EventLogModel> result = new ArrayList<EventLogModel>();
+
+		queryResult.forEach(map -> {
+			System.out.println(EventLogModel.convert(map).toString());
+			result.add(EventLogModel.convert(map));
+
+		});
+		*/
 		return MongoDashboardRepository.getInstance().getEventLogs(timestampLandscape);
+		
+		//return result;
 	}
 
 	public List<EventLogInfoModel> getInfoModels(int entries) {
-		return MongoDashboardRepository.getInstance().getEventInfos(entries);
+		Map<String, Object> query = new Hashtable<>();
+		query.put("type", "eventloginfo");
+
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query,entries, this);
+		List<EventLogInfoModel> result = new ArrayList<EventLogInfoModel>();
+
+		queryResult.forEach(map -> {
+			result.add(EventLogInfoModel.convert(map));
+
+		});
+			
+		return result;
 	}
 
 }

@@ -22,6 +22,9 @@ public final class Main {
 		// utility class
 	}
 
+	
+
+	
 	/**
 	 * Entry point for the web service. This main method will start a web server
 	 * based on the configuration properties inside of the explorviz.properties file
@@ -30,6 +33,10 @@ public final class Main {
 	 */
 	public static void main(final String[] args) {
 
+		//test
+		Debug d = new Debug();
+		d.createTestLandscape();
+		
 		int port = getPort();
 
 		final Server server = new Server(port);

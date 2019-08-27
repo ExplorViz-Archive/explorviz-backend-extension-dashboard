@@ -68,7 +68,7 @@ public class EventLogModel extends BaseModel {
 	public static EventLogModel convert(Map<String, Object> map) {
 		long timestampLandscape = (long) map.get("timestampLandscape");
 		long timestampEvent = (long) map.get("timestampEvent");
-		EEventType eventType = (EEventType) map.get("eventType");
+		EEventType eventType =  EEventType.valueOf(map.get("eventType").toString());
 		String eventMessage = (String) map.get("eventMessage");
 
 		return new EventLogModel(timestampLandscape, timestampEvent, eventType, eventMessage);
@@ -79,7 +79,7 @@ public class EventLogModel extends BaseModel {
 		result.put("type", "eventlog");
 		result.put("timestampLandscape", this.timestampLandscape);
 		result.put("timestampEvent", this.timestampEvent);
-		result.put("eventType", this.eventType);
+		result.put("eventType", this.eventType.toString());
 		result.put("eventMessage", this.eventMessage);
 
 		return result;

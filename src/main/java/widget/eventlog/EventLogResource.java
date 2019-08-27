@@ -18,7 +18,7 @@ public class EventLogResource {
 	@Produces(MEDIA_TYPE)
 	public List<EventLogModel> getListModel(
 			@DefaultValue("0") @QueryParam("timestampLandscape") String timestampLandscape) {
-
+		System.out.println("ressource");
 		return EventLogService.getInstance().getEventLogModels(timestampLandscape);
 
 	}

@@ -48,6 +48,9 @@ dependencies {
   		
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+    
+    //for getting a landscape from a file
+    implementation group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
 }
 
 // Disable standard Jar build and

@@ -26,6 +26,7 @@ public class RamCpuSettingsService {
 	 * @return RamCpuSettingsModel
 	 */
 	public RamCpuSettingsModel getSetting(int instanceID) {
+		
 		RamCpuSettingsModel result = MongoDashboardRepository.getInstance().getRamCpuSetting(instanceID);
 
 		// setting default data for that widget instance
