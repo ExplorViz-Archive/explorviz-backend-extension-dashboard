@@ -42,7 +42,7 @@ public class AggregatedResponseTimeService {
 		query.put("type", "aggregatedresponsetime");
 		query.put("timestampLandscape", timestampLandscape);
 
-		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, this);
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().querySort(query, this);
 		List<AggregatedResponseTimeModel> result = new ArrayList<AggregatedResponseTimeModel>();
 
 		queryResult.forEach(map -> {
@@ -58,7 +58,7 @@ public class AggregatedResponseTimeService {
 
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "aggregatedresponsetimeinfo");
-		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, limit, this);
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().querySort(query, limit, this);
 
 		List<AggregatedResponseTimeInfoModel> result = new ArrayList<AggregatedResponseTimeInfoModel>();
 		queryResult.forEach(map -> {

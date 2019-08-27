@@ -28,7 +28,7 @@ public class EventLogSettingsService {
 		query.put("type", "eventlogsetting");
 		query.put("instanceID", instanceID);
 
-		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, this);
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().querySort(query, this);
 		List<EventLogSettingsModel> result = new ArrayList<EventLogSettingsModel>();
 
 		queryResult.forEach(map -> {

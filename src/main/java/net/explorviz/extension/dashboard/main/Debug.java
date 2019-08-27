@@ -36,11 +36,11 @@ public class Debug {
 				ResourceConverter converter = new ResourceConverter();
 				converter.registerType(Landscape.class);
 				
-				
+				/*
 				TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
 					GenericTypeFinder.getTypeMap().put(classname, classRef);
 				});
-				
+				*/
 			
 				
 				//register(Landscape.class);

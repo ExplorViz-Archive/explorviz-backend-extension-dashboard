@@ -80,7 +80,7 @@ public class EventLogService {
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "eventloginfo");
 
-		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query,entries, this);
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().querySort(query,entries, this);
 		List<EventLogInfoModel> result = new ArrayList<EventLogInfoModel>();
 
 		queryResult.forEach(map -> {

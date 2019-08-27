@@ -35,10 +35,12 @@ public class TotalRequestsResource {
 			return TotalRequestsService.getInstance().getAllModels();
 		}
 		
+		/*
 		if (action.equals("reduced")) {
 			//System.out.println("all");
 			return TotalRequestsService.getInstance().getReducedModels();
 		}
+		*/
 		
 		
 		if(action.equals("recent")) 

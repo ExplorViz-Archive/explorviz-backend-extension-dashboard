@@ -1,8 +1,10 @@
 package widget.totalrequests;
 
+import java.util.Hashtable;
+import java.util.Map;
 import com.github.jasminb.jsonapi.annotations.Type;
-
 import net.explorviz.extension.dashboard.main.BaseModel;
+
 
 @Type("totalrequests")
 public class TotalRequestsModel extends BaseModel {
@@ -44,6 +46,29 @@ public class TotalRequestsModel extends BaseModel {
 
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String toString() {
+		return "totalrequests - landscapeID: " + landscapeID + " totalRequests: " + totalRequests + " timestamp: "
+				+ timestamp;
+	}
+
+	public static TotalRequestsModel convert(Map<String, Object> map) {
+		String landscapeID = (String) map.get("landscapeID");
+		int totalRequests = (int) map.get("totalRequests");
+		long timestamp = (long) map.get("timestamp");
+
+		return new TotalRequestsModel(landscapeID, totalRequests, timestamp);
+	}
+
+	public Map<String, Object> convert() {
+		Map<String, Object> result = new Hashtable<>();
+		result.put("type", "totalrequests");
+		result.put("landscapeID", this.landscapeID);
+		result.put("totalRequests", this.totalRequests);
+		result.put("timestamp", this.timestamp);
+
+		return result;
 	}
 
 }

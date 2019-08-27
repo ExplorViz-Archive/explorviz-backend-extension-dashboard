@@ -45,7 +45,7 @@ public class OperationResponseTimeService {
 	public List<OperationResponseTimeInfoModel> getOperationResponseTimeInfo(int limit){
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "operationresponsetimeinfo");
-		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, limit, this);
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().querySort(query, limit, this);
 		
 		List<OperationResponseTimeInfoModel> result = new ArrayList<OperationResponseTimeInfoModel>();
 		queryResult.forEach(map -> {
@@ -59,7 +59,7 @@ public class OperationResponseTimeService {
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "operationresponsetime");
 		query.put("timestampLandscape", timestampLandscape);
-		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().query(query, limit, this);
+		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().querySort(query, limit, this);
 		
 		List<OperationResponseTimeModel> result = new ArrayList<OperationResponseTimeModel>();
 		queryResult.forEach(map -> {

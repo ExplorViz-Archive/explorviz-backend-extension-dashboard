@@ -9,20 +9,17 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.bson.Document;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.operation.OrderBy;
 import instantiatedwidgets.InstantiatedWidgetModel;
 import net.explorviz.shared.landscape.model.event.EEventType;
-import widget.eventlog.EventLogInfoModel;
 import widget.eventlog.EventLogModel;
 import widget.ramcpu.RamCpuSettingsModel;
-import widget.totalrequests.TotalRequestsModel;
+
 
 public class MongoDashboardRepository {
 
@@ -41,171 +38,9 @@ public class MongoDashboardRepository {
 		return mongoDashboardRepository;
 	}
 
-	public void saveClazzCommunication(final String landscapeID, final String operationName, final int totalRequests,
-			final float averageResponse) {
+	
 
-		final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
-
-		final Document dashboardDocument = new Document();
-
-		dashboardDocument.append("landscapeID", landscapeID);
-		dashboardDocument.append("operationName", operationName);
-		dashboardDocument.append("totalRequests", totalRequests);
-		dashboardDocument.append("averageResponse", averageResponse);
-
-		try {
-			dashboardCollection.insertOne(dashboardDocument);
-		} catch (final MongoException e) {
-			throw e;
-		}
-
-	}
-
-	public Optional<String> getClazzCommunicationByLandscapeID(final String landscapeID) {
-
-		final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
-
-		final Document dashboardDocument = new Document();
-
-		dashboardDocument.append("landscapeID", landscapeID);
-
-		final FindIterable<Document> result = dashboardCollection.find(dashboardDocument);
-
-		if (result.first() == null) {
-			return Optional.empty();
-		} else {
-			return Optional.of("" + result.first().get("landscapeID"));
-		}
-	}
-
-	private Object totalRequestslock = new Object();
-
-	public void saveTotalRequests(final String landscapeID, final int totalRequests, final long timestamp) {
-		synchronized (totalRequestslock) {
-			final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
-
-			final Document dashboardDocument = new Document();
-
-			dashboardDocument.append("type", "totalrequests");
-			dashboardDocument.append("landscapeID", landscapeID);
-			dashboardDocument.append("totalRequests", totalRequests);
-			dashboardDocument.append("timestamp", timestamp);
-
-			try {
-				dashboardCollection.insertOne(dashboardDocument);
-			} catch (final MongoException e) {
-				throw e;
-			}
-		}
-
-	}
-
-	public TotalRequestsModel getTotalRequests(final String landscapeID) {
-		synchronized (totalRequestslock) {
-			final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
-
-			final Document dashboardDocument = new Document();
-
-			dashboardDocument.append("type", "totalrequests");
-			dashboardDocument.append("landscapeID", landscapeID);
-
-			final FindIterable<Document> result = dashboardCollection.find(dashboardDocument);
-
-			if (result.first() == null) {
-				return null;
-			} else {
-
-				if (result.first().get("landscapeID") != null && result.first().get("totalRequests") != null
-						&& result.first().get("timestamp") != null) {
-
-					String id = "" + result.first().get("landscapeID");
-					int totalRequests = Integer.parseInt(result.first().get("totalRequests").toString());
-					Long timestamp = Long.parseLong(result.first().get("timestamp").toString());
-
-					return new TotalRequestsModel(id, totalRequests, timestamp);
-
-				} else {
-					return null;
-				}
-
-			}
-		}
-	}
-
-	public TotalRequestsModel getLastTotalRequests() {
-
-		synchronized (totalRequestslock) {
-			final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
-
-			final Document dashboardDocument = new Document();
-
-			dashboardDocument.append("type", "totalrequests");
-
-			final FindIterable<Document> result = dashboardCollection.find(dashboardDocument).limit(1)
-					.sort(new BasicDBObject("_id", OrderBy.DESC.getIntRepresentation())).limit(1);
-
-			if (result.first() == null) {
-				return null;
-			} else {
-
-				if (result.first().get("landscapeID") != null && result.first().get("totalRequests") != null
-						&& result.first().get("timestamp") != null) {
-
-					String landscapeID = "" + result.first().get("landscapeID");
-					int totalRequests = Integer.parseInt(result.first().get("totalRequests").toString());
-					Long timestamp = Long.parseLong(result.first().get("timestamp").toString());
-
-					return new TotalRequestsModel(landscapeID, totalRequests, timestamp);
-
-				} else {
-					return null;
-				}
-
-			}
-		}
-	}
-
-	public List<TotalRequestsModel> getAllTotalRequests() {
-
-		synchronized (totalRequestslock) {
-			final MongoCollection<Document> dashboardCollection = mongoHelper.getDashboardCollection();
-
-			final Document dashboardDocument = new Document();
-
-			dashboardDocument.append("type", "totalrequests");
-
-			final FindIterable<Document> result = dashboardCollection.find(dashboardDocument);
-
-			if (result.first() == null) {
-				return null;
-			} else {
-
-				List<TotalRequestsModel> modelList = new ArrayList<TotalRequestsModel>();
-
-				for (Iterator<Document> i = result.iterator(); i.hasNext();) {
-
-					Document temp = (Document) i.next();
-
-					if (temp.get("landscapeID") != null && temp.get("totalRequests") != null
-							&& temp.get("timestamp") != null) {
-
-						String landscapeID = "" + temp.get("landscapeID");
-						int totalRequests = Integer.parseInt(temp.get("totalRequests").toString());
-						Long timestamp = Long.parseLong(temp.get("timestamp").toString());
-
-						modelList.add(new TotalRequestsModel(landscapeID, totalRequests, timestamp));
-
-					} else {
-						return null;
-					}
-
-				}
-
-				return modelList;
-
-			}
-		}
-	}
+	
 
 	private Object instantiatedWidgetslock = new Object();
 
@@ -511,7 +346,7 @@ public class MongoDashboardRepository {
 
 	}
 
-	public List<Map<String, Object>> query(Map<String, Object> query, Object lock) {
+	public List<Map<String, Object>> querySort(Map<String, Object> query, Object lock) {
 		synchronized (lock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
@@ -545,9 +380,9 @@ public class MongoDashboardRepository {
 		}
 	}
 
-	public List<Map<String, Object>> query(Map<String, Object> query, int limit, Object lock) {
+	public List<Map<String, Object>> querySort(Map<String, Object> query, int limit, Object lock) {
 		synchronized (lock) {
-			System.out.println("query");
+			//System.out.println("query");
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
 			final Document document = new Document();
@@ -568,7 +403,75 @@ public class MongoDashboardRepository {
 
 					temp.forEach((k, v) -> {
 						if (!k.equals("_id")) {
-							System.out.println("query - key: " + k + "value: " + v);
+							//System.out.println("query - key: " + k + "value: " + v);
+							map.put(k, v);
+						}
+					});
+					result.add(map);
+				}
+				return result;
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+		}
+	}
+	
+	public List<Map<String, Object>> query(Map<String, Object> query, Object lock) {
+		synchronized (lock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			query.forEach((k, v) -> {
+				document.append(k, v);
+			});
+
+			try {
+				final FindIterable<Document> find = collection.find(document);
+
+				List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+
+				for (Iterator<Document> i = find.iterator(); i.hasNext();) {
+					Document temp = (Document) i.next();
+					Map<String, Object> map = new Hashtable<>();
+
+					temp.forEach((k, v) -> {
+						if (!k.equals("_id")) {
+							map.put(k, v);
+						}
+					});
+					result.add(map);
+				}
+				return result;
+			} catch (final MongoException e) {
+				throw e;
+			}
+
+		}
+	}
+
+	public List<Map<String, Object>> query(Map<String, Object> query, int limit, Object lock) {
+		synchronized (lock) {
+			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
+
+			final Document document = new Document();
+
+			query.forEach((k, v) -> {
+				document.append(k, v);
+			});
+
+			try {
+				final FindIterable<Document> find = collection.find(document).limit(limit);
+
+				List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+
+				for (Iterator<Document> i = find.iterator(); i.hasNext();) {
+					Document temp = (Document) i.next();
+					Map<String, Object> map = new Hashtable<>();
+
+					temp.forEach((k, v) -> {
+						if (!k.equals("_id")) {
 							map.put(k, v);
 						}
 					});

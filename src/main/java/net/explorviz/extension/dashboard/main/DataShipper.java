@@ -23,6 +23,7 @@ import widget.ramcpu.RamCpuModel;
 import widget.ramcpu.RamCpuService;
 import widget.totaloverview.TotalOverviewModel;
 import widget.totaloverview.TotalOverviewService;
+import widget.totalrequests.TotalRequestsModel;
 import widget.totalrequests.TotalRequestsService;
 
 public class DataShipper {
@@ -50,8 +51,8 @@ public class DataShipper {
 		long startTime = java.lang.System.currentTimeMillis();
 		EventLogService.getInstance().update(l.getTimestamp().getTimestamp(), l.getEvents());
 
-		TotalRequestsService.getInstance().update(l.getId(), l.getTimestamp().getTotalRequests(),
-				l.getTimestamp().getTimestamp());
+		TotalRequestsService.getInstance().update(new TotalRequestsModel(l.getId(), l.getTimestamp().getTotalRequests(),
+				l.getTimestamp().getTimestamp()));
 
 		activeClassInstances = new ArrayList<ActiveClassInstancesModel>();
 		operationResponseTimes = new ArrayList<OperationResponseTimeModel>();
