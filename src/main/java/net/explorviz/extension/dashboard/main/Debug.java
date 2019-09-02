@@ -13,6 +13,7 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.github.jasminb.jsonapi.ResourceConverter;
 
@@ -44,7 +45,7 @@ public class Debug {
 			
 				
 				//register(Landscape.class);
-				LandscapeSerializationHelper serializationHelper = new LandscapeSerializationHelper(new ResourceConverter());
+				LandscapeSerializationHelper serializationHelper = new LandscapeSerializationHelper(converter);
 				
 				Landscape l = serializationHelper.deserialize(jsonTxt);
 				java.lang.System.out.println("done");
