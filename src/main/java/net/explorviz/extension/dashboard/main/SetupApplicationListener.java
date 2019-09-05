@@ -25,6 +25,9 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 	@Inject
 	private KafkaLandscapeExchangeService landscapeExchangeService;
+	
+	@Inject
+	private Dummy dummy;
 
 	@Inject
 	private IdGenerator idGenerator;
@@ -47,6 +50,8 @@ public class SetupApplicationListener implements ApplicationEventListener {
 		return null;
 	}
 
+	public static boolean DUMMYMODE = true;
+	
 	private void startExtension() {
 		LOGGER.info("* * * * * * * * * * * * * * * * * * *\n");
 		LOGGER.info("Dashboard Extension Servlet initialized.\n");
@@ -54,11 +59,16 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 		// add your DI injected code here for full DI context access
 
-		new Thread(this.landscapeExchangeService).start();
-
-		// erstmal so !?
+		
+		if(DUMMYMODE) {
+			this.dummy.createTestLandscape();
+			new Thread(this.dummy).start();
+		}else {
+			new Thread(this.landscapeExchangeService).start();
+		}
 
 		TotalRequestsModel.initialize(this.idGenerator);
+		
 
 	}
 

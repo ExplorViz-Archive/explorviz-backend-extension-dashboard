@@ -22,6 +22,8 @@ public class DependencyInjectionBinder extends CommonDependencyInjectionBinder {
 		this.bind(KafkaLandscapeExchangeService.class).to(KafkaLandscapeExchangeService.class).in(Singleton.class);
 
 		this.bind(LandscapeSerializationHelper.class).to(LandscapeSerializationHelper.class).in(Singleton.class);
+		
+		this.bind(Dummy.class).to(Dummy.class).in(Singleton.class);
 
 	}
 }

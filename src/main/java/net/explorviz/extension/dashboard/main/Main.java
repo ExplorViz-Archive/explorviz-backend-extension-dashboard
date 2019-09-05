@@ -31,12 +31,7 @@ public final class Main {
 	 *
 	 * @param args not used at the moment
 	 */
-	public static void main(final String[] args) {
-
-		//test
-		Debug d = new Debug();
-		d.createTestLandscape();
-		
+	public static void main(final String[] args) {	
 		int port = getPort();
 
 		final Server server = new Server(port);

@@ -38,7 +38,9 @@ public class MongoDashboardRepository {
 		return mongoDashboardRepository;
 	}
 
-	
+	public MongoHelper getMongoHelper() {
+		return mongoHelper;
+	}
 
 	
 
