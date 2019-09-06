@@ -124,7 +124,7 @@ public class Dummy implements Runnable {
 					l.getSystems().get(0).getNodeGroups().get(0).getNodes().get(1).setUsedRAM(8600000000L);
 					
 					//active class isntances widget
-					l.getSystems().get(0).getNodeGroups().get(0).getNodes().get(0).getApplications().get(0).getApplicationCommunications().get(0).get
+					//l.getSystems().get(0).getNodeGroups().get(0).getNodes().get(0).getApplications().get(0).getApplicationCommunications().get(0).get
 					break;
 				case 1:
 					//totalrequest widget

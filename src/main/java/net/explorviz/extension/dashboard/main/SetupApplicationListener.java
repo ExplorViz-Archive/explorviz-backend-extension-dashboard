@@ -50,7 +50,7 @@ public class SetupApplicationListener implements ApplicationEventListener {
 		return null;
 	}
 
-	public static boolean DUMMYMODE = true;
+
 	
 	private void startExtension() {
 		LOGGER.info("* * * * * * * * * * * * * * * * * * *\n");
@@ -60,7 +60,7 @@ public class SetupApplicationListener implements ApplicationEventListener {
 		// add your DI injected code here for full DI context access
 
 		
-		if(DUMMYMODE) {
+		if(Main.DUMMYMODE) {
 			this.dummy.createTestLandscape();
 			new Thread(this.dummy).start();
 		}else {

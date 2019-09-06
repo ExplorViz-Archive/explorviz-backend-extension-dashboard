@@ -17,7 +17,7 @@ public final class Main {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final int DEFAULT_PORT = 8085;
-
+	public static  boolean DUMMYMODE = false;
 	private Main() {
 		// utility class
 	}
@@ -32,6 +32,15 @@ public final class Main {
 	 * @param args not used at the moment
 	 */
 	public static void main(final String[] args) {	
+		
+		
+		if(args.length != 0) {
+			if(args[0].equals("dummy")) {
+				System.out.println("Dummy Mode activated.");
+				DUMMYMODE = true;
+			}
+		}
+		
 		int port = getPort();
 
 		final Server server = new Server(port);
