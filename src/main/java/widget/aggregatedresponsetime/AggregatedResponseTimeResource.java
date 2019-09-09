@@ -17,10 +17,17 @@ public class AggregatedResponseTimeResource {
 	@GET
 	@Produces(MEDIA_TYPE)
 	public List<AggregatedResponseTimeModel> getList(
-			@DefaultValue("0") @QueryParam("timestampLandscape") long timestampLandscape) {
+			@DefaultValue("0") @QueryParam("timestampLandscape") long timestampLandscape,@DefaultValue("0") @QueryParam("limit") int limit)
+	{
+		if(limit == 0 && timestampLandscape != 0) {
 		return AggregatedResponseTimeService.getInstance().getAggregatedResponseTimes(timestampLandscape);
+		}else {
+			return AggregatedResponseTimeService.getInstance().getLastAggregatedResponseTimes(limit);
+		}
 
 	}
+	
+
 	
 
 }

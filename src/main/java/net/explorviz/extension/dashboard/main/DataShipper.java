@@ -186,7 +186,7 @@ public class DataShipper {
 							// hotfix - kieker is generating sometimes a response time of -1 !?
 							if (temp.getAverageResponseTime() != -1) {
 								operationResponseTimes.add(temp);
-								java.lang.System.out.println(temp.toString());
+								//java.lang.System.out.println(temp.toString());
 
 							}
 							/*

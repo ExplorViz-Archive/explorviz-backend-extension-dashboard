@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-
 import persistence.MongoDashboardRepository;
 
 public class AggregatedResponseTimeService {
@@ -21,6 +20,8 @@ public class AggregatedResponseTimeService {
 		return AggregatedResponseTimeService.instance;
 	}
 
+	private List<AggregatedResponseTimeModel> aggregatedResponseTimes = new ArrayList<AggregatedResponseTimeModel>();
+	
 	public void update(List<AggregatedResponseTimeModel> updatedAggregatedResponseTimes) {
 
 		if (!updatedAggregatedResponseTimes.isEmpty()) {
@@ -34,6 +35,8 @@ public class AggregatedResponseTimeService {
 				MongoDashboardRepository.getInstance().save(m.convert(), this);
 			}
 		}
+		
+		aggregatedResponseTimes = sortByResponseTime(updatedAggregatedResponseTimes);
 	}
 
 	public List<AggregatedResponseTimeModel> getAggregatedResponseTimes(long timestampLandscape) {
@@ -52,6 +55,15 @@ public class AggregatedResponseTimeService {
 
 		return sortByResponseTime(result);
 
+	}
+	
+	public List<AggregatedResponseTimeModel> getLastAggregatedResponseTimes(int limit) {
+		
+		if (limit >= aggregatedResponseTimes.size()) {
+			limit = aggregatedResponseTimes.size();
+		}
+
+		return aggregatedResponseTimes.subList(0, limit);
 	}
 
 	public List<AggregatedResponseTimeInfoModel> getAggregatedResponseTimeInfos(int limit) {

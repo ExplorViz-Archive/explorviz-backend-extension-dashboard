@@ -18,7 +18,6 @@ public class OperationResponseTimeResource {
 	@Produces(MEDIA_TYPE)
 	public List<OperationResponseTimeModel> getList(@DefaultValue("5") @QueryParam("limit") int limit) {
 		return OperationResponseTimeService.getInstance().getOperationResponseTimes(limit);
-
 	}
 
 

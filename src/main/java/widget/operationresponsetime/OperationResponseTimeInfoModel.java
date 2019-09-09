@@ -4,8 +4,10 @@ import java.util.Hashtable;
 import java.util.Map;
 import com.github.jasminb.jsonapi.annotations.Type;
 
+import net.explorviz.extension.dashboard.main.BaseModel;
+
 @Type("operationresponsetimeinfo")
-public class OperationResponseTimeInfoModel {
+public class OperationResponseTimeInfoModel extends BaseModel{
 
 	private long timestampLandscape;
 	private int amount;
