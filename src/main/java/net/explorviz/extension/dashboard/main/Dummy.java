@@ -22,6 +22,8 @@ import com.github.jasminb.jsonapi.ResourceConverter;
 import kafka.LandscapeSerializationHelper;
 import net.explorviz.shared.common.provider.GenericTypeFinder;
 import net.explorviz.shared.landscape.model.application.Application;
+import net.explorviz.shared.landscape.model.event.EEventType;
+import net.explorviz.shared.landscape.model.event.Event;
 import net.explorviz.shared.landscape.model.helper.EProgrammingLanguage;
 import net.explorviz.shared.landscape.model.helper.TypeProvider;
 
@@ -107,6 +109,10 @@ public class Dummy implements Runnable {
 			try {
 				java.sql.Timestamp timestamp = new java.sql.Timestamp(java.lang.System.currentTimeMillis());
 				l.getTimestamp().setTimestamp(timestamp.getTime());
+				
+				if(l.getEvents().size() >= 2) {
+					l.getEvents().remove(1);
+				}
 
 				switch (counter % 5) {
 				case 0:
@@ -139,6 +145,14 @@ public class Dummy implements Runnable {
 					
 					l.getSystems().get(0).getNodeGroups().get(0).getNodes().get(1).setFreeRAM(5503728640L);
 					l.getSystems().get(0).getNodeGroups().get(0).getNodes().get(1).setUsedRAM(11600000000L);
+				
+					
+					//Exception
+					Event e = new Event("landscape-cf6f2ce2-ead9-4842-9490-5336a1f6d071-69", timestamp.getTime(), EEventType.NEWNODE, "New node '192.168.48.95:8084' detected");
+					l.getEvents().remove(0);
+					l.getEvents().add(e);
+					
+			
 					break;
 				case 2:
 					//totalrequest widget
@@ -153,6 +167,11 @@ public class Dummy implements Runnable {
 					
 					l.getSystems().get(0).getNodeGroups().get(0).getNodes().get(1).setFreeRAM(7503728640L);
 					l.getSystems().get(0).getNodeGroups().get(0).getNodes().get(1).setUsedRAM(9600000000L);
+					
+					//Exception
+					Event e2 = new Event("landscape-cf6f2ce2-ead9-4842-9490-5336a1f6d071-69", timestamp.getTime(), EEventType.EXCEPTION, "Evil exception");
+					l.getEvents().add(e2);
+					
 					break;
 				case 3:
 					//totalrequest widget
