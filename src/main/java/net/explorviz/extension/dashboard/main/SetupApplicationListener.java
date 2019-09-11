@@ -61,7 +61,6 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 		
 		if(Main.DUMMYMODE) {
-			this.dummy.createTestLandscape();
 			new Thread(this.dummy).start();
 		}else {
 			new Thread(this.landscapeExchangeService).start();
