@@ -8,6 +8,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+/**
+ * This class is the resource for the EventLog Widget. The
+ * resource can be accessed through http. the path is
+ * "widgets/eventlog". The media type is json.
+ * 
+ * @author Florian Krippner
+ *
+ */
 @Path("widgets/eventlog")
 @PermitAll
 public class EventLogResource {

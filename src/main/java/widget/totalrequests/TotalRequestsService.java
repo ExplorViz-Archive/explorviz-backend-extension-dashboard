@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Map;
 import persistence.MongoDashboardRepository;
 
+/**
+ * This is the service class of the total requests widget. This class is a
+ * singelton.
+ * 
+ * @author Florian Krippner
+ *
+ */
 public class TotalRequestsService {
 
 	private static TotalRequestsService instance;
@@ -20,10 +27,19 @@ public class TotalRequestsService {
 		return TotalRequestsService.instance;
 	}
 
+	/**
+	 * This method updates the widget with newer data
+	 * 
+	 * @param m a newer TotalRequestsModel for the update
+	 */
 	public void update(TotalRequestsModel m) {
 		MongoDashboardRepository.getInstance().save(m.convert(), this);
 	}
 
+	/**
+	 * 
+	 * @return This method returns the TotalRequestsModel of the last landscape
+	 */
 	public TotalRequestsModel getCurrentModel() {
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "totalrequests");
@@ -44,6 +60,11 @@ public class TotalRequestsService {
 
 	}
 
+	/**
+	 * 
+	 * @return This method returns a list of all TotalRequestsModels in the
+	 *         database.
+	 */
 	public List<TotalRequestsModel> getAllModels() {
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "totalrequests");
@@ -59,6 +80,11 @@ public class TotalRequestsService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return This method returns a list of the last 10 TotalRequestsModels from
+	 *         the last 10 landscapes.
+	 */
 	public List<TotalRequestsModel> getRecentModels() {
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "totalrequests");
@@ -73,49 +99,5 @@ public class TotalRequestsService {
 
 		return result;
 	}
-
-	/**
-	 * Gibt eine reduzierte Liste von TotalRequestsModel's aus der Datenbank zurück.
-	 * Hierbei wird der durchschnitt der Daten gebildet.
-	 * 
-	 * @return List<TotalRequestsModel>
-	 */
-	/*
-	 * public List<TotalRequestsModel> getReducedModels() {
-	 * 
-	 * List<TotalRequestsModel> allData =
-	 * MongoDashboardRepository.getInstance().getAllTotalRequests();
-	 * //System.out.println("Size: " + allData.size());
-	 * 
-	 * List<TotalRequestsModel> newList = new ArrayList<TotalRequestsModel>();
-	 * 
-	 * int length = allData.size(); int from = 0; int spectrum = 360;
-	 * 
-	 * while (length >= spectrum) { length -= spectrum; List<TotalRequestsModel>
-	 * temp = allData.subList(from, from + spectrum);
-	 * 
-	 * int totalrequests = 0; long timestamp = 0;
-	 * 
-	 * String landscapeid = temp.get(0).getLandscapeID() + " to " +
-	 * temp.get(temp.size() - 1).getLandscapeID();
-	 * 
-	 * for (int i = 0; i < temp.size(); i++) { timestamp +=
-	 * temp.get(i).getTimestamp(); totalrequests += temp.get(i).getTotalRequests();
-	 * }
-	 * 
-	 * totalrequests /= temp.size(); timestamp /= temp.size();
-	 * 
-	 * TotalRequestsModel averageModel = new TotalRequestsModel(landscapeid,
-	 * totalrequests, timestamp); newList.add(averageModel);
-	 * 
-	 * from += 360; }
-	 * 
-	 * for (int i = length; i >= 0; i--) { newList.add(allData.get(allData.size() -
-	 * i - 1)); }
-	 * 
-	 * return newList;
-	 * 
-	 * }
-	 */
 
 }

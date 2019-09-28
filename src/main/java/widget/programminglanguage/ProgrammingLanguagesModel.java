@@ -1,10 +1,19 @@
 package widget.programminglanguage;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-
 import net.explorviz.extension.dashboard.main.BaseModel;
 import net.explorviz.shared.landscape.model.helper.EProgrammingLanguage;
 
+/**
+ * This is the model of the ProgrammingLanguages.</br>
+ * properties:</br>
+ * {@link #timestamp}</br>
+ * {@link #programminglanguage}</br>
+ * {@link #applicationName}
+ * 
+ * @author Florian Krippner
+ *
+ */
 @Type("programminglanguage")
 public class ProgrammingLanguagesModel extends BaseModel {
 
@@ -12,14 +21,15 @@ public class ProgrammingLanguagesModel extends BaseModel {
 	private long timestamp;
 
 	private EProgrammingLanguage programminglanguage;
-	
+
 	private String applicationName;
 
 	public ProgrammingLanguagesModel() {
 		// default constructor for JSON API parsing
 	}
 
-	public ProgrammingLanguagesModel(final long timestamp, final String applicationName, final EProgrammingLanguage programminglanguage) {
+	public ProgrammingLanguagesModel(final long timestamp, final String applicationName,
+			final EProgrammingLanguage programminglanguage) {
 		this.timestamp = timestamp;
 		this.applicationName = applicationName;
 		this.programminglanguage = programminglanguage;

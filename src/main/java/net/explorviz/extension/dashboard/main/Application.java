@@ -34,9 +34,7 @@ import widget.totaloverview.TotalOverviewModel;
 import widget.totaloverview.TotalOverviewResource;
 import widget.totalrequests.TotalRequestsModel;
 import widget.totalrequests.TotalRequestsResource;
-
 import org.glassfish.jersey.server.ResourceConfig;
-
 import instantiatedwidgets.InstantiatedWidgetModel;
 import instantiatedwidgets.InstantiatedWidgetResource;
 
@@ -61,8 +59,6 @@ public class Application extends ResourceConfig {
 		GenericTypeFinder.getTypeMap().put("AggregatedResponseTimeModel", AggregatedResponseTimeModel.class);
 		GenericTypeFinder.getTypeMap().put("AggregatedResponseTimeInfoModel", AggregatedResponseTimeInfoModel.class);
 
-		
-		
 		// register Landscape Model classes, since we want to use them
 		TypeProvider.getExplorVizCoreTypesAsMap().forEach((classname, classRef) -> {
 			GenericTypeFinder.getTypeMap().put(classname, classRef);
@@ -95,7 +91,7 @@ public class Application extends ResourceConfig {
 		register(OperationResponseTimeInfoResource.class);
 		register(AggregatedResponseTimeResource.class);
 		register(AggregatedResponseTimeInfoResource.class);
-		
+
 		// Starting point for your DI-based extension
 		this.register(SetupApplicationListener.class);
 	}

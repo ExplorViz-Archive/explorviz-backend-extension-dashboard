@@ -1,9 +1,19 @@
 package widget.totaloverview;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-
 import net.explorviz.extension.dashboard.main.BaseModel;
 
+/**
+ * This class is the model for the TotalOverview widget.</br>
+ * properties:</br>
+ * {@link #timestamp}</br>
+ * {@link #numberOfSystems}</br>
+ * {@link #numberOfNodes}</br>
+ * {@link #numberOfApplications}
+ * 
+ * @author Florian Krippner
+ *
+ */
 @Type("totaloverviewwidget")
 public class TotalOverviewModel extends BaseModel {
 

@@ -1,10 +1,15 @@
 package widget.programminglanguage;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-
 import net.explorviz.extension.dashboard.main.BaseModel;
 import net.explorviz.shared.landscape.model.helper.EProgrammingLanguage;
 
+/**
+ * This is the model for the programminglanguagesoccurrence widget.
+ * 
+ * @author Florian Krippner
+ *
+ */
 @Type("programminglanguagesoccurrence")
 public class ProgrammingLanguagesOccurrenceModel extends BaseModel {
 

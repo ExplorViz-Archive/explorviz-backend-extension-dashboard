@@ -10,17 +10,24 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+/**
+ * This class defines the resource, which is accessable over http. the path for
+ * this ressource is widgets/instantiatedwidget
+ * 
+ * @author Florian Krippner
+ */
 @Path("widgets/instantiatedwidget")
-
-// @RolesAllowed({"admin"})
-
 @PermitAll
 public class InstantiatedWidgetResource {
 
-	// Access annotations can also be applied at method level
-
+	// The MEDIA TYPE is JSON
 	private static final String MEDIA_TYPE = "application/vnd.api+json";
 
+	/**
+	 * 
+	 * @param userID the id of the user inside explorviz
+	 * @return returns the instantiated widgets for a given user as json
+	 */
 	@GET
 	@Produces(MEDIA_TYPE)
 	public List<InstantiatedWidgetModel> getAll(@DefaultValue("0") @QueryParam("userID") String userID) {
@@ -28,6 +35,14 @@ public class InstantiatedWidgetResource {
 
 	}
 
+	/**
+	 * This method will be triggered with a post request and save a
+	 * InstantiatedWidgetModel into the database. if the timestamp is set to -1 this
+	 * method will delete a given InstantiatedWidgetModel from the database.
+	 * 
+	 * @param model this paramterer should be a InstantiatedWidgetModel
+	 * @return
+	 */
 	@POST
 	public Response postMsg(InstantiatedWidgetModel model) {
 

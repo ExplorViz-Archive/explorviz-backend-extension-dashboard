@@ -2,10 +2,18 @@ package widget.aggregatedresponsetime;
 
 import java.util.Hashtable;
 import java.util.Map;
-
 import com.github.jasminb.jsonapi.annotations.Type;
 import net.explorviz.extension.dashboard.main.BaseModel;
 
+/**
+ * This is the model for the AggregatedResponseTimeInfo </br>
+ * properties: </br>
+ * {@link #timestampLandscape}</br>
+ * {@link #entries}
+ * 
+ * @author Florian Krippner
+ *
+ */
 @Type("aggregatedresponsetimeinfo")
 public class AggregatedResponseTimeInfoModel extends BaseModel {
 
@@ -42,6 +50,14 @@ public class AggregatedResponseTimeInfoModel extends BaseModel {
 		return "aggregatedresponsetimeinfo - timestampLandscape: " + timestampLandscape + " entries: " + entries;
 	}
 
+	/**
+	 * This method converts a Map of (string,object) pairs to a
+	 * AggregatedResponseTimeInfoModel the map needs the keys timestampLandscape and
+	 * entries
+	 * 
+	 * @param map
+	 * @return returns a AggregatedResponseTimeInfoModel
+	 */
 	public static AggregatedResponseTimeInfoModel convert(Map<String, Object> map) {
 		long timestampLandscape = (long) map.get("timestampLandscape");
 		int entries = (int) map.get("entries");
@@ -49,6 +65,11 @@ public class AggregatedResponseTimeInfoModel extends BaseModel {
 		return new AggregatedResponseTimeInfoModel(timestampLandscape, entries);
 	}
 
+	/**
+	 * This method convert this object to a key/value format in a map.
+	 * 
+	 * @return returns a map of (String, Object) pairs.
+	 */
 	public Map<String, Object> convert() {
 		Map<String, Object> result = new Hashtable<>();
 		result.put("type", "aggregatedresponsetimeinfo");

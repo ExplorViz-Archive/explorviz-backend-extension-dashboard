@@ -20,7 +20,13 @@ import net.explorviz.shared.landscape.model.event.EEventType;
 import widget.eventlog.EventLogModel;
 import widget.ramcpu.RamCpuSettingsModel;
 
-
+/**
+ * This class holds functions for saving/deleting data inside the mongo
+ * database. This class is a singelton
+ * 
+ * @author Florian Krippner
+ *
+ */
 public class MongoDashboardRepository {
 
 	private static MongoHelper mongoHelper;
@@ -42,10 +48,15 @@ public class MongoDashboardRepository {
 		return mongoHelper;
 	}
 
-	
-
 	private Object instantiatedWidgetslock = new Object();
 
+	/**
+	 * This class saves a list of InstantiatedWidgetModels with a given userid into
+	 * the database
+	 * 
+	 * @param userID              the id of the user in explorviz
+	 * @param instantiatedWidgets a list of InstantiatedWidgetModels
+	 */
 	public void saveInstantiatedWidgets(String userID, List<InstantiatedWidgetModel> instantiatedWidgets) {
 		synchronized (instantiatedWidgetslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -71,6 +82,11 @@ public class MongoDashboardRepository {
 
 	}
 
+	/**
+	 * This function saves a InstantiatedWidgetModel into the databse
+	 * 
+	 * @param widget the widget to save
+	 */
 	public void saveInstantiatedWidget(InstantiatedWidgetModel widget) {
 		synchronized (instantiatedWidgetslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -100,6 +116,12 @@ public class MongoDashboardRepository {
 
 	}
 
+	/**
+	 * This function returns a list of InstantiatedWidgetModels to a given userID
+	 * 
+	 * @param userID the userID to search for
+	 * @return a list of InstantiatedWidgetModels
+	 */
 	public List<InstantiatedWidgetModel> getInstantiatedWidgets(String userID) {
 		synchronized (instantiatedWidgetslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -119,7 +141,6 @@ public class MongoDashboardRepository {
 			}
 
 			if (result.first() == null) {
-				// return null;
 				list.add(new InstantiatedWidgetModel(userID, "empty", 0, 0, 0));
 				return list;
 			} else {
@@ -151,6 +172,11 @@ public class MongoDashboardRepository {
 		}
 	}
 
+	/**
+	 * This method deletes all InstantiatedWidgets to a given userID
+	 * 
+	 * @param userID the userID of the current user in ExplorViz
+	 */
 	public void deleteAllInstantiatedWidgets(String userID) {
 		synchronized (instantiatedWidgetslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -166,6 +192,12 @@ public class MongoDashboardRepository {
 		}
 	}
 
+	/**
+	 * This method delete a specific InstantiatedWidget to a given userID
+	 * 
+	 * @param userID     the userID of the current user in ExplorViz
+	 * @param instanceID the ID of the widget to delete
+	 */
 	public void deleteInstantiatedWidget(String userID, int instanceID) {
 		synchronized (instantiatedWidgetslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -185,6 +217,11 @@ public class MongoDashboardRepository {
 
 	private Object ramcpusettingslock = new Object();
 
+	/**
+	 * This method can save a RamCpuSettingsModel into the database.
+	 * 
+	 * @param setting require a RamCpuSettingsModel to save
+	 */
 	public void saveRamCpuSetting(RamCpuSettingsModel setting) {
 		synchronized (ramcpusettingslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -205,6 +242,12 @@ public class MongoDashboardRepository {
 		}
 	}
 
+	/**
+	 * This method deletes a RamCpuSettingsModel from the database with a specific
+	 * instanceID
+	 * 
+	 * @param instanceID required instanceID to delete the model
+	 */
 	public void deleteRamCpuSetting(int instanceID) {
 		synchronized (ramcpusettingslock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -221,6 +264,13 @@ public class MongoDashboardRepository {
 		}
 	}
 
+	/**
+	 * This method returns a RamCpuSettingsModel to a given instanceID of a
+	 * ramcpuwidget
+	 * 
+	 * @param instanceID the instanceID of a ramcpuwidget
+	 * @return returns a RamCpuSettingsModel
+	 */
 	public RamCpuSettingsModel getRamCpuSetting(int instanceID) {
 		synchronized (ramcpusettingslock) {
 
@@ -256,7 +306,13 @@ public class MongoDashboardRepository {
 
 	private Object eventloglock = new Object();
 
-
+	/**
+	 * this method returns a list of EventLogModels from the database that are
+	 * connected with a given timestamp of a landscape.
+	 * 
+	 * @param timestampLandscape a timestamp of a landscape
+	 * @return returns a list of EventLogModels
+	 */
 	public List<EventLogModel> getEventLogs(String timestampLandscape) {
 		synchronized (eventloglock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -296,10 +352,10 @@ public class MongoDashboardRepository {
 		}
 	}
 
-	
-
-	
-
+	/**
+	 * This function prints the whole database into a file.txt inside the project
+	 * folder.
+	 */
 	public void printDatabase() {
 		PrintStream ps_console = System.out;
 		try {
@@ -328,14 +384,19 @@ public class MongoDashboardRepository {
 		System.setOut(ps_console);
 	}
 
-
+	/**
+	 * This function saves a Map of String and Objects into the database. The String
+	 * is for the key and the Object is the object to save
+	 * 
+	 * @param data a Map of a String,Object
+	 * @param lock a Object to synchronize the function.
+	 */
 	public void save(Map<String, Object> data, Object lock) {
 		synchronized (lock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
 			final Document document = new Document();
 			data.forEach((k, v) -> {
-				// System.out.println("save: " + k + ": " + v);
 				document.append(k, v);
 			});
 
@@ -348,6 +409,13 @@ public class MongoDashboardRepository {
 
 	}
 
+	/**
+	 * This function can query for a given Map and sort the result
+	 * 
+	 * @param query a Map of String Objects to query for
+	 * @param lock  a Object to synchronize on
+	 * @return This function returns a List of Map (String, Object).
+	 */
 	public List<Map<String, Object>> querySort(Map<String, Object> query, Object lock) {
 		synchronized (lock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -382,9 +450,17 @@ public class MongoDashboardRepository {
 		}
 	}
 
+	/**
+	 * This function can query for a given Map and sort the result. addionally it
+	 * will limit the result to a given number
+	 * 
+	 * @param query a Map of String Objects to query for
+	 * @param limit a number that limiot the result
+	 * @param lock  a Object to synchronize on
+	 * @return this function returns a List of Map (String, Object).
+	 */
 	public List<Map<String, Object>> querySort(Map<String, Object> query, int limit, Object lock) {
 		synchronized (lock) {
-			//System.out.println("query");
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
 
 			final Document document = new Document();
@@ -405,7 +481,6 @@ public class MongoDashboardRepository {
 
 					temp.forEach((k, v) -> {
 						if (!k.equals("_id")) {
-							//System.out.println("query - key: " + k + "value: " + v);
 							map.put(k, v);
 						}
 					});
@@ -418,7 +493,14 @@ public class MongoDashboardRepository {
 
 		}
 	}
-	
+
+	/**
+	 * This function query in the database for a given Map of String,Object pairs.
+	 * 
+	 * @param query a map of (String,Object) pairs.
+	 * @param lock  a object to synchronize the function
+	 * @return returns a list of a map of (string,object) pairs
+	 */
 	public List<Map<String, Object>> query(Map<String, Object> query, Object lock) {
 		synchronized (lock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -453,6 +535,15 @@ public class MongoDashboardRepository {
 		}
 	}
 
+	/**
+	 * This function query in the database for a given Map of String,Object pairs
+	 * and will limit the result to a given number
+	 * 
+	 * @param query a map of (String,Object) pairs.
+	 * @param limit a number to limit the result
+	 * @param lock  a object to synchronize the function
+	 * @return returns a list of a map of (string,object) pairs
+	 */
 	public List<Map<String, Object>> query(Map<String, Object> query, int limit, Object lock) {
 		synchronized (lock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();
@@ -487,6 +578,13 @@ public class MongoDashboardRepository {
 		}
 	}
 
+	/**
+	 * This function deletes entries out of a databse with a given Map of string,
+	 * object pairs.
+	 * 
+	 * @param query a map of string, object pairs to query for
+	 * @param lock  a object to synchronize the function
+	 */
 	public void delete(Map<String, Object> query, Object lock) {
 		synchronized (lock) {
 			final MongoCollection<Document> collection = mongoHelper.getDashboardCollection();

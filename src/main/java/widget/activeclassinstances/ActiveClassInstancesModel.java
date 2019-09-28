@@ -1,9 +1,19 @@
 package widget.activeclassinstances;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-
 import net.explorviz.extension.dashboard.main.BaseModel;
 
+/**
+ * This clas is the model for the Active class instances Widget.<br>
+ * 
+ * properties:<br>
+ * {@link #timestampLandscape}<br>
+ * {@link #className}<br>
+ * {@link #instances}<br>
+ * 
+ * @author Florian Krippner
+ *
+ */
 @Type("activeclassinstances")
 public class ActiveClassInstancesModel extends BaseModel {
 
@@ -21,7 +31,6 @@ public class ActiveClassInstancesModel extends BaseModel {
 		this.className = className;
 		this.instances = instances;
 	}
-
 
 	public long getTimestampLandscape() {
 		return timestampLandscape;

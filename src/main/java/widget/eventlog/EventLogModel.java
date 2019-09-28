@@ -65,6 +65,11 @@ public class EventLogModel extends BaseModel {
 				+ " eventMessage: " + eventMessage;
 	}
 
+	/**
+	 * This method convert a Map of a (string,object) pair with the models properties as keys and the right objects as values to a model.
+	 * @param map a Map of (String, Object) pairs, that should have the properties of this model included.
+	 * @return return a EventLogModel
+	 */
 	public static EventLogModel convert(Map<String, Object> map) {
 		long timestampLandscape = (long) map.get("timestampLandscape");
 		long timestampEvent = (long) map.get("timestampEvent");
@@ -74,6 +79,13 @@ public class EventLogModel extends BaseModel {
 		return new EventLogModel(timestampLandscape, timestampEvent, eventType, eventMessage);
 	}
 
+	/**
+	 * This method convert this model into a Map of (String, Object)
+	 * reprensentation. The key/string is a propertiename of this model and the
+	 * value/Object is the content.
+	 * 
+	 * @return returns a Map of (String,Object) pairs, which represent this model.
+	 */
 	public Map<String, Object> convert() {
 		Map<String, Object> result = new Hashtable<>();
 		result.put("type", "eventlog");

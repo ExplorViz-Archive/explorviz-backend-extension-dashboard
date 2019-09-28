@@ -1,9 +1,14 @@
 package widget.ramcpu;
 
 import java.util.List;
-
 import persistence.MongoDashboardRepository;
 
+/**
+ * This is a service class for the ram cpu settings. This class is a singelton
+ * 
+ * @author Florian Krippner
+ *
+ */
 public class RamCpuSettingsService {
 
 	private static RamCpuSettingsService instance;
@@ -26,7 +31,7 @@ public class RamCpuSettingsService {
 	 * @return RamCpuSettingsModel
 	 */
 	public RamCpuSettingsModel getSetting(int instanceID) {
-		
+
 		RamCpuSettingsModel result = MongoDashboardRepository.getInstance().getRamCpuSetting(instanceID);
 
 		// setting default data for that widget instance
@@ -46,6 +51,11 @@ public class RamCpuSettingsService {
 
 	}
 
+	/**
+	 * This method sets the ramp cpu settings for a widget.
+	 * 
+	 * @param setting requires a RamCpuSettingsModel
+	 */
 	public void setSetting(RamCpuSettingsModel setting) {
 		MongoDashboardRepository.getInstance().saveRamCpuSetting(setting);
 	}

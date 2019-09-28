@@ -2,11 +2,21 @@ package widget.aggregatedresponsetime;
 
 import java.util.Hashtable;
 import java.util.Map;
-
 import com.github.jasminb.jsonapi.annotations.Type;
-
 import net.explorviz.extension.dashboard.main.BaseModel;
 
+/**
+ * This class is the model for the AggregatedResponseTime Widget</br>
+ * properties:</br>
+ * {@link #timestampLandscape}</br>
+ * {@link #totalRequests}</br>
+ * {@link #averageResponseTime}</br>
+ * {@link #sourceClazzFullName}</br>
+ * {@link #targetClazzFullName}
+ * 
+ * @author Florian Krippner
+ *
+ */
 @Type("aggregatedresponsetime")
 public class AggregatedResponseTimeModel extends BaseModel {
 
@@ -76,6 +86,15 @@ public class AggregatedResponseTimeModel extends BaseModel {
 				+ " targetClazzFullName: " + targetClazzFullName;
 	}
 
+	/**
+	 * This method can convert a Map of Key/Objects to a
+	 * AggregatedResponseTimeModel</br>
+	 * the keys timestampLandscape, totalRequests, averageResponseTime,
+	 * sourceClazzFullName and targetClazzFullName are required.
+	 * 
+	 * @param The Map of the (String, Object) pairs
+	 * @return returns a AggregatedResponseTimeModel
+	 */
 	public static AggregatedResponseTimeModel convert(Map<String, Object> map) {
 		long timestampLandscape = (long) map.get("timestampLandscape");
 		int totalRequests = (int) map.get("totalRequests");
@@ -87,6 +106,11 @@ public class AggregatedResponseTimeModel extends BaseModel {
 				sourceClazzFullName, targetClazzFullName);
 	}
 
+	/**
+	 * This function convert this object into a Map of Key,Objects.
+	 * 
+	 * @return returns a Map of (String,Object) pairs, which represents this object
+	 */
 	public Map<String, Object> convert() {
 		Map<String, Object> result = new Hashtable<>();
 		result.put("type", "aggregatedresponsetime");

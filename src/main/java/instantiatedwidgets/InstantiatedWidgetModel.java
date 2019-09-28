@@ -1,16 +1,24 @@
 package instantiatedwidgets;
 
 import com.github.jasminb.jsonapi.annotations.Type;
-
 import net.explorviz.extension.dashboard.main.BaseModel;
 
+/**
+ * This class represents the model of a instantiated widget.
+ * 
+ * @author Florian Krippner
+ */
 @Type("instantiatedwidget")
 public class InstantiatedWidgetModel extends BaseModel {
 
 	private String userID;
 	private String widgetName;
 	private int instanceID;
+
+	// a timestamp is needed to delete older instantiated widgets if needed.
 	private long timestamp;
+
+	// this is the id for the placeorder on the dashboard itself.
 	private int orderID;
 
 	public InstantiatedWidgetModel() {
@@ -68,6 +76,6 @@ public class InstantiatedWidgetModel extends BaseModel {
 
 	public String toString() {
 		return "instantiatedwidget: [userID: " + userID + ", widgetName: " + widgetName + ", instanceID: " + instanceID
-				+ ", timestamp: " + timestamp + ", orderID: "+ orderID + "]";
+				+ ", timestamp: " + timestamp + ", orderID: " + orderID + "]";
 	}
 }

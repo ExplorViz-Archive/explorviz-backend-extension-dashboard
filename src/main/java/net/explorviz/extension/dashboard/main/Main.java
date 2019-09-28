@@ -17,30 +17,28 @@ public final class Main {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	private static final int DEFAULT_PORT = 8085;
-	public static  boolean DUMMYMODE = false;
+	public static boolean DUMMYMODE = false;
+
 	private Main() {
 		// utility class
 	}
 
-	
-
-	
 	/**
 	 * Entry point for the web service. This main method will start a web server
 	 * based on the configuration properties inside of the explorviz.properties file
 	 *
 	 * @param args not used at the moment
 	 */
-	public static void main(final String[] args) {	
-		
-		
-		if(args.length != 0) {
-			if(args[0].equals("dummy")) {
+	public static void main(final String[] args) {
+
+		// if the first argument is dummy, then set dummy mode to true
+		if (args.length != 0) {
+			if (args[0].equals("dummy")) {
 				System.out.println("Dummy Mode activated.");
 				DUMMYMODE = true;
 			}
 		}
-		
+
 		int port = getPort();
 
 		final Server server = new Server(port);
@@ -89,7 +87,6 @@ public final class Main {
 			return statedContextPath;
 		}
 	}
-	
 
 	private static ResourceConfig createJaxRsApp() {
 		return new ResourceConfig(new Application());

@@ -6,7 +6,13 @@ import java.util.List;
 import java.util.Map;
 import persistence.MongoDashboardRepository;
 
-
+/**
+ * This is the service class of the OperationResponseTime Widget. This class is
+ * a singelton
+ * 
+ * @author Florian Krippner
+ *
+ */
 public class OperationResponseTimeService {
 
 	private static OperationResponseTimeService instance;
@@ -21,8 +27,16 @@ public class OperationResponseTimeService {
 		return OperationResponseTimeService.instance;
 	}
 
+	// a list of the OperationResponseTimeModels of the latest landscape
 	private List<OperationResponseTimeModel> operationResponseTimes = new ArrayList<OperationResponseTimeModel>();
 
+	/**
+	 * This method updates the OperationResponseTime widget with new data. the data
+	 * will be stored inside the database.
+	 * 
+	 * @param updatedOperationResponseTimes a list of OperationResponseTimeModels
+	 *                                      for the update.
+	 */
 	public void update(List<OperationResponseTimeModel> updatedOperationResponseTimes) {
 
 		if (!updatedOperationResponseTimes.isEmpty()) {
@@ -31,7 +45,7 @@ public class OperationResponseTimeService {
 
 				MongoDashboardRepository.getInstance().save(m.convert(), this);
 			}
-			
+
 			Map<String, Object> table = new Hashtable<>();
 			table.put("type", "operationresponsetimeinfo");
 			table.put("timestampLandscape", updatedOperationResponseTimes.get(0).getTimestampLandscape());
@@ -41,12 +55,17 @@ public class OperationResponseTimeService {
 
 		operationResponseTimes = sortByResponseTime(updatedOperationResponseTimes);
 	}
-	
-	public List<OperationResponseTimeInfoModel> getOperationResponseTimeInfo(int limit){
+
+	/**
+	 * 
+	 * @param limit this parameter limit the size of the returned list
+	 * @return This method returns a list of OperationResponseTimeInfoModel
+	 */
+	public List<OperationResponseTimeInfoModel> getOperationResponseTimeInfo(int limit) {
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "operationresponsetimeinfo");
 		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().querySort(query, limit, this);
-		
+
 		List<OperationResponseTimeInfoModel> result = new ArrayList<OperationResponseTimeInfoModel>();
 		queryResult.forEach(map -> {
 			result.add(OperationResponseTimeInfoModel.convert(map));
@@ -55,21 +74,34 @@ public class OperationResponseTimeService {
 		return result;
 	}
 
-	public List<OperationResponseTimeModel> getOperationResponseTimes(long timestampLandscape, int limit) {		
+	/**
+	 * 
+	 * @param timestampLandscape the timestamp of a landscape for the query
+	 * @param limit              this paramter limit the size of the returned list
+	 * @return this method returns a list of OperationResponseTimeModels for a given
+	 *         landscape
+	 */
+	public List<OperationResponseTimeModel> getOperationResponseTimes(long timestampLandscape, int limit) {
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "operationresponsetime");
 		query.put("timestampLandscape", timestampLandscape);
 		List<Map<String, Object>> queryResult = MongoDashboardRepository.getInstance().querySort(query, limit, this);
-		
+
 		List<OperationResponseTimeModel> result = new ArrayList<OperationResponseTimeModel>();
 		queryResult.forEach(map -> {
 			result.add(OperationResponseTimeModel.convert(map));
 
 		});
 		return sortByResponseTime(result);
-	
+
 	}
 
+	/**
+	 * 
+	 * @param limit limit the size of the returned list
+	 * @return this function returns a list of OperationResponseTimeModel of the
+	 *         latest landscape
+	 */
 	public List<OperationResponseTimeModel> getOperationResponseTimes(int limit) {
 
 		if (limit >= operationResponseTimes.size()) {
@@ -79,6 +111,13 @@ public class OperationResponseTimeService {
 		return operationResponseTimes.subList(0, limit);
 	}
 
+	/**
+	 * this list sort a list of OperationResponseTimeModels by the response time.
+	 * biggest first.
+	 * 
+	 * @param oldList the list to sort
+	 * @return returns a list of OperationResponseTimeModel sorted.
+	 */
 	public List<OperationResponseTimeModel> sortByResponseTime(List<OperationResponseTimeModel> oldList) {
 		List<OperationResponseTimeModel> newList = new ArrayList<OperationResponseTimeModel>();
 

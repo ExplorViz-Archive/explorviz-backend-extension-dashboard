@@ -2,7 +2,6 @@ package net.explorviz.extension.dashboard.main;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebListener;
-
 import net.explorviz.shared.common.idgen.IdGenerator;
 import widget.totalrequests.TotalRequestsModel;
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
@@ -12,7 +11,6 @@ import org.glassfish.jersey.server.monitoring.RequestEvent;
 import org.glassfish.jersey.server.monitoring.RequestEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import kafka.KafkaLandscapeExchangeService;
 
 /**
@@ -25,7 +23,7 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 	@Inject
 	private KafkaLandscapeExchangeService landscapeExchangeService;
-	
+
 	@Inject
 	private Dummy dummy;
 
@@ -50,8 +48,6 @@ public class SetupApplicationListener implements ApplicationEventListener {
 		return null;
 	}
 
-
-	
 	private void startExtension() {
 		LOGGER.info("* * * * * * * * * * * * * * * * * * *\n");
 		LOGGER.info("Dashboard Extension Servlet initialized.\n");
@@ -59,15 +55,16 @@ public class SetupApplicationListener implements ApplicationEventListener {
 
 		// add your DI injected code here for full DI context access
 
-		
-		if(Main.DUMMYMODE) {
+		// if dummy mode is true, then start the dummy
+		if (Main.DUMMYMODE) {
 			new Thread(this.dummy).start();
-		}else {
+		} else {
+			// else start the landscape exchange service
 			new Thread(this.landscapeExchangeService).start();
 		}
 
+		// initialize a model once.
 		TotalRequestsModel.initialize(this.idGenerator);
-		
 
 	}
 

@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Map;
 import persistence.MongoDashboardRepository;
 
+/**
+ * This is the service class for the EventLogSettings. This class is a
+ * singelton.
+ * 
+ * @author Florian Krippner
+ *
+ */
 public class EventLogSettingsService {
 
 	private static EventLogSettingsService instance;
@@ -20,10 +27,14 @@ public class EventLogSettingsService {
 		return EventLogSettingsService.instance;
 	}
 
+	/**
+	 * This function returns a EventLogSettingsModel from the database that is
+	 * connected to a instanceID of a eventlog widget.
+	 * 
+	 * @param instanceID the instance id of a widget
+	 * @return returns a EventLogSettingsModel
+	 */
 	public EventLogSettingsModel getSetting(int instanceID) {
-		// EventLogSettingsModel result =
-		// MongoDashboardRepository.getInstance().getEventLogSetting(instanceID);
-
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "eventlogsetting");
 		query.put("instanceID", instanceID);
@@ -43,6 +54,11 @@ public class EventLogSettingsService {
 
 	}
 
+	/**
+	 * This function can set a EventLogSettingsModel for a eventlog widget.
+	 * 
+	 * @param setting a EventLogSettingsModel is required.
+	 */
 	public void setSetting(EventLogSettingsModel setting) {
 		Map<String, Object> query = new Hashtable<>();
 		query.put("type", "eventlogsetting");
