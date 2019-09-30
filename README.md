@@ -15,6 +15,6 @@ The related frontend extension is [explorviz-frontend-extension-dashboard](https
 1. Follow the [Eclipse Setup](https://github.com/ExplorViz/explorviz-backend#eclipse-setup) of the [ExplorViz Backend](https://github.com/ExplorViz/explorviz-backend)
 2. Clone this repository
 3. Import project into eclipse: via `Import -> Gradle -> Existing Gradle project -> path/to/explorviz-backend-extension-dashboard`
-4. Start the docker-compose-dashboard.yml file inside the mongo_db folder via  "docker-compsoe -f docker-compose-dashboard.yml up -d"
+4. Start the docker-compose-dashboard.yml file inside the mongo_db folder via  `docker-compsoe -f docker-compose-dashboard.yml up -d`
 5. Start **explorviz-backend-extension-dashboard** via Eclipse Tab: `Run As -> Java Application -> Select Main - net.explorviz.extension.dashboard.main -> OK`
 6. Setup and start [explorviz-frontend](https://github.com/ExplorViz/explorviz-frontend) with the installed [explorviz-frontend-extension-dashboard](https://github.com/ExplorViz/explorviz-frontend-extension-dashboard)
